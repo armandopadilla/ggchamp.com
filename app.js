@@ -14,7 +14,6 @@ fastify
     fastify.next('/logout', require('./backend/logout'));
     fastify.next('/invite', require('./backend/invite'));
 
-
     // Games
     fastify.next('/games/:gameId/join', require('./backend/games/join'));
     fastify.next('/games/create', require('./backend/games/create'));
@@ -27,8 +26,53 @@ fastify
     fastify.next('/deposit', require('./backend/banking/deposit'));
     fastify.next('/withdraw', require('./backend/banking/withdraw'));
 
-
   });
+
+
+// Async endpoints
+fastify.post('/user/create', {
+  schema: {
+    body: {
+      type: 'object',
+      properties: {
+        username: { type: 'string', minLength: 4, maxLength: 100 },
+        email: { type: 'string', format: 'email' },
+        phone: { type: 'string' },
+        password: { type: 'string', minLength: 6, maxLength: 20 }
+      },
+      required: ['username', 'email', 'password']
+    }
+  }
+}, (req, res) => {
+  // Grab all the data
+  const {
+    username,
+    email,
+    phone,
+    password
+  } = req.body;
+
+  // Attempt to save the user
+  return request.post('https://api.xxxxx.com/v1/user')
+    .then((response) => {
+      if (response.statusCode !== 200) return res.send(response.errorMessage);
+      return res.send(response.data);
+    })
+    .catch(err => {
+      console.log(err);
+      return res.send(err);
+    });
+});
+
+
+// Scaffold.
+fastify.post('/invite', {}, (req, res) => {});
+fastify.post('/resetpassword', {}, (req, res) => {});
+fastify.post('/banking/deposit', {}, (req, res) => {});
+fastify.post('/banking/withdraw', {}, (req, res) => {});
+fastify.post('/game', {}, (req, res) => {});
+fastify.post('/game/:gameId/join', {}, (req, res) => {});
+
 
 
 fastify.listen(3000, err => {
