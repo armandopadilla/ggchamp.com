@@ -1,5 +1,7 @@
 import React from 'react';
 import App, { Container } from 'next/app';
+import Header from './header';
+import Footer from './footer';
 
 export default class MyApp extends App {
   static async getInitialProps({ Component, router, ctx }) {
@@ -17,9 +19,9 @@ export default class MyApp extends App {
 
     return (
       <Container>
-          <div>Header here cause fuck it</div>
+          <Header />
             <Component {...pageProps} />
-          <div>Footer cause why not</div>
+          <Footer />
       </Container>
     )
   }
