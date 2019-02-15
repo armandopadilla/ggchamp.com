@@ -96,12 +96,48 @@ fastify.post('/resetpassword', {
     });
 });
 
+/**
+ * Create a new match
+ */
+fastify.post('/game', {
+  schema: {
+    body: {
+      type: 'object',
+      properties: {
+        gameId: { type: 'string' },
+        contestId: { type: 'string' }
+      },
+      required: [ 'gameId', 'contestId' ]
+    }
+  }
+}, (req, res) => {
+
+  const {
+    gameId,
+    contestId
+  } = req.body;
+
+  return request.post('https://api.xxxxx.com/v1/game/join')
+    .then((response) => {
+      if (response.statusCode !== 200) return res.send(response.errorMessage);
+    })
+    .then(() => {
+      return request.post('https://api.xxxxx.com/v1/contest/join');
+    })
+    .then((response) => {
+      return res.send({})
+    })
+    .catch(err => {
+      console.log(err);
+      return res.send(err);
+    });
+
+});
 
 // Scaffold.
 fastify.post('/invite', {}, (req, res) => {});
 fastify.post('/banking/deposit', {}, (req, res) => {});
 fastify.post('/banking/withdraw', {}, (req, res) => {});
-fastify.post('/game', {}, (req, res) => {});
 fastify.post('/game/:gameId/join', {}, (req, res) => {});
 
 
