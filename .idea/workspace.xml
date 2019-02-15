@@ -2,16 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d78b8b69-8245-4dc5-9323-337934698384" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/pages/games/create-thankyou.js" afterPath="$PROJECT_DIR$/pages/game/create-thankyou.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/pages/games/create.js" afterPath="$PROJECT_DIR$/pages/game/create.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/pages/games/join-thankyou.js" afterPath="$PROJECT_DIR$/pages/game/join-thankyou.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/pages/games/join.js" afterPath="$PROJECT_DIR$/pages/game/join.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/pages/games/my-games.js" afterPath="$PROJECT_DIR$/pages/game/my-games.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/backend/index.js" afterPath="$PROJECT_DIR$/backend/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/backend/login.js" afterPath="$PROJECT_DIR$/backend/login.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/backend/signup.js" afterPath="$PROJECT_DIR$/backend/signup.js" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -29,8 +21,8 @@
       <file leaf-file-name="app.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="63" column="7" lean-forward="true" selection-start-line="63" selection-start-column="7" selection-end-line="63" selection-end-column="7" />
+            <state relative-caret-position="435">
+              <caret line="100" column="46" lean-forward="false" selection-start-line="100" selection-start-column="46" selection-end-line="100" selection-end-column="46" />
               <folding />
             </state>
           </provider>
@@ -834,8 +826,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="63" column="7" lean-forward="true" selection-start-line="63" selection-start-column="7" selection-end-line="63" selection-end-column="7" />
+        <state relative-caret-position="435">
+          <caret line="100" column="46" lean-forward="false" selection-start-line="100" selection-start-column="46" selection-end-line="100" selection-end-column="46" />
           <folding />
         </state>
       </provider>
