@@ -30,6 +30,10 @@ fastify
 
 
 // Async endpoints
+
+/**
+ * Create a new account
+ */
 fastify.post('/user/create', {
   schema: {
     body: {
@@ -65,9 +69,36 @@ fastify.post('/user/create', {
 });
 
 
+/**
+ * Reset Password
+ */
+fastify.post('/resetpassword', {
+  schema: {
+    body: {
+      type: 'object',
+      properties: {
+        email: { type: 'string', format: 'email' }
+      },
+      required: ['email']
+    }
+  }
+}, (req, res) => {
+  const { email } = req.body;
+
+  return request.post('https://api.xxxxx.com/v1/user/reset-password')
+    .then((response) => {
+      if (response.statusCode !== 200) return res.send(response.errorMessage);
+      return res.send(response.data);
+    })
+    .catch(err => {
+      console.log(err);
+      return res.send(err);
+    });
+});
+
+
 // Scaffold.
 fastify.post('/invite', {}, (req, res) => {});
-fastify.post('/resetpassword', {}, (req, res) => {});
 fastify.post('/banking/deposit', {}, (req, res) => {});
 fastify.post('/banking/withdraw', {}, (req, res) => {});
 fastify.post('/game', {}, (req, res) => {});
