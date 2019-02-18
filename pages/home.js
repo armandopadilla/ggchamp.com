@@ -28,7 +28,7 @@ export default class Home extends Component {
         <td>{game.entries}</td>
         <td>{game.entryAmount}</td>
         <td>{game.startDateTime}</td>
-        <td><Link href={`/games/${game.id}/join`}>Join</Link></td>
+        <td><Link href={`/game/${game.id}/join`}>Join</Link></td>
       </tr>)
     )
   };
@@ -41,7 +41,7 @@ export default class Home extends Component {
           <tr>
             <td><Link href="/user/profile">Profile</Link></td>
             <td> | Winnings: $1231</td>
-            <td> | <Link href="/games/create">Create New Game</Link></td>
+            <td> | <Link href="/game/create">Create New Game</Link></td>
             <td> | <Link href="/invite">Invite Friends</Link></td>
           </tr>
         </table>
