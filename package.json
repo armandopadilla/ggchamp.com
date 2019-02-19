@@ -13,6 +13,7 @@
   "dependencies": {
     "@material-ui/core": "^3.9.2",
     "@material-ui/icons": "^3.0.2",
+    "clsx": "^1.0.3",
     "fastify": "^1.14.1",
     "fastify-nextjs": "^4.0.1",
     "next": "^8.0.1",
