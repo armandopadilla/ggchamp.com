@@ -46,6 +46,7 @@ fastify.register(require('./backend/wallet/postWithdraw'));
 fastify.register(require('./backend/postInvite'));
 
 
+
 fastify.listen(3000, err => {
   if (err) throw err;
   console.log('Server listening on 3000');
