@@ -4,7 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import compose from 'recompose/compose';
 import { withStyles } from '@material-ui/core/styles';
-import Link from '@material-ui/core/Link';
+import Link from 'next/link';
 import { Field, Form, FormSpy } from 'react-final-form';
 import Typography from './modules/components/Typography';
 import AppFooter from './modules/views/AppFooter';
@@ -62,7 +62,7 @@ class SignIn extends React.Component {
             </Typography>
             <Typography variant="body2" align="center">
               {'Not a member yet? '}
-              <Link href="/premium-themes/onepirate/sign-up" align="center" underline="always">
+              <Link href="/signup" align="center" underline="always">
                 Sign Up here
               </Link>
             </Typography>

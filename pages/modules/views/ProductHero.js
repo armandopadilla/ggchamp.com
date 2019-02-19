@@ -49,7 +49,7 @@ function ProductHero(props) {
         size="large"
         className={classes.button}
         component={linkProps => (
-          <Link {...linkProps} href="/signup" variant="button" />
+          <Link prefetch {...linkProps} href="/signup" variant="button" />
         )}
       >
         Register
