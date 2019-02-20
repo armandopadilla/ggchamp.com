@@ -9,6 +9,7 @@ fastify
     fastify.next('/home', require('./backend/home'));
     fastify.next('/verify-account', require('./backend/verify-account'));
     fastify.next('/signup', require('./backend/signup'));
+    fastify.next('/signin', require('./backend/signin'));
     fastify.next('/resetpassword', require('./backend/resetpassword'));
     fastify.next('/login', require('./backend/login'));
     fastify.next('/logout', require('./backend/logout'));
@@ -44,6 +45,7 @@ fastify.register(require('./backend/wallet/postDeposit'));
 fastify.register(require('./backend/wallet/postWithdraw'));
 // Invite
 fastify.register(require('./backend/postInvite'));
+
 
 
 fastify.listen(3000, err => {

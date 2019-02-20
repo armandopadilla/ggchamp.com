@@ -4,7 +4,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import compose from 'recompose/compose';
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
 import Link from 'next/link';
 import { Field, Form, FormSpy } from 'react-final-form';
 import Typography from './modules/components/Typography';
@@ -29,13 +28,13 @@ const styles = theme => ({
   },
 });
 
-class SignUp extends React.Component {
+class SignIn extends React.Component {
   state = {
     sent: false,
   };
 
   validate = values => {
-    const errors = required(['firstName', 'lastName', 'email', 'password'], values, this.props);
+    const errors = required(['email', 'password'], values, this.props);
 
     if (!errors.email) {
       const emailError = email(values.email, values, this.props);
@@ -59,11 +58,12 @@ class SignUp extends React.Component {
         <AppForm>
           <React.Fragment>
             <Typography variant="h3" gutterBottom marked="center" align="center">
-              Sign Up
+              Sign In
             </Typography>
             <Typography variant="body2" align="center">
-              <Link href="/signin">
-                Already have an account?
+              {'Not a member yet? '}
+              <Link href="/signup" align="center" underline="always">
+                Sign Up here
               </Link>
             </Typography>
           </React.Fragment>
@@ -74,31 +74,9 @@ class SignUp extends React.Component {
           >
             {({ handleSubmit, submitting }) => (
               <form onSubmit={handleSubmit} className={classes.form} noValidate>
-                <Grid container spacing={16}>
-                  <Grid item xs={12} sm={6}>
-                    <Field
-                      autoFocus
-                      component={RFTextField}
-                      autoComplete="fname"
-                      fullWidth
-                      label="First name"
-                      name="firstName"
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Field
-                      component={RFTextField}
-                      autoComplete="lname"
-                      fullWidth
-                      label="Last name"
-                      name="lastName"
-                      required
-                    />
-                  </Grid>
-                </Grid>
                 <Field
                   autoComplete="email"
+                  autoFocus
                   component={RFTextField}
                   disabled={submitting || sent}
                   fullWidth
@@ -106,9 +84,11 @@ class SignUp extends React.Component {
                   margin="normal"
                   name="email"
                   required
+                  size="large"
                 />
                 <Field
                   fullWidth
+                  size="large"
                   component={RFTextField}
                   disabled={submitting || sent}
                   required
@@ -130,14 +110,20 @@ class SignUp extends React.Component {
                 <FormButton
                   className={classes.button}
                   disabled={submitting || sent}
+                  size="large"
                   color="secondary"
                   fullWidth
                 >
-                  {submitting || sent ? 'In progress…' : 'Sign Up'}
+                  {submitting || sent ? 'In progress…' : 'Sign In'}
                 </FormButton>
               </form>
             )}
           </Form>
+          <Typography align="center">
+            <Link underline="always" href="/premium-themes/onepirate/forgot-password">
+              Forgot password?
+            </Link>
+          </Typography>
         </AppForm>
         <AppFooter />
       </React.Fragment>
@@ -145,11 +131,11 @@ class SignUp extends React.Component {
   }
 }
 
-SignUp.propTypes = {
+SignIn.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
 export default compose(
   withRoot,
   withStyles(styles),
-)(SignUp);
+)(SignIn);
