@@ -1,155 +1,53 @@
-import withRoot from './modules/withRoot';
-// --- Post bootstrap -----
-import React from 'react';
-import PropTypes from 'prop-types';
-import compose from 'recompose/compose';
-import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Link from 'next/link';
-import { Field, Form, FormSpy } from 'react-final-form';
-import Typography from './modules/components/Typography';
-import AppFooter from './modules/views/AppFooter';
-import AppAppBar from './modules/views/AppAppBar';
-import AppForm from './modules/views/AppForm';
-import { email, required } from './modules/form/validation';
-import RFTextField from './modules/form/RFTextField';
-import FormButton from './modules/form/FormButton';
-import FormFeedback from './modules/form/FormFeedback';
+import React, { Component } from 'react';
+import { Col, Form, FormGroup, Label, Input, Button } from 'reactstrap';
 
-const styles = theme => ({
-  form: {
-    marginTop: theme.spacing.unit * 6,
-  },
-  button: {
-    marginTop: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 2,
-  },
-  feedback: {
-    marginTop: theme.spacing.unit * 2,
-  },
-});
+export default class Index extends Component {
 
-class SignUp extends React.Component {
   state = {
-    sent: false,
+    username: '',
+    password: '',
+    email: '',
+    phone: '',
+    dob: ''
   };
 
-  validate = values => {
-    const errors = required(['firstName', 'lastName', 'email', 'password'], values, this.props);
+  handleInputChange = () => {};
 
-    if (!errors.email) {
-      const emailError = email(values.email, values, this.props);
-      if (emailError) {
-        errors.email = email(values.email, values, this.props);
-      }
-    }
-
-    return errors;
+  handleSubmit = (e) => {
+    e.preventDefault();
   };
 
-  handleSubmit = () => {};
-
-  render() {
-    const { classes } = this.props;
-    const { sent } = this.state;
-
+  render (){
     return (
-      <React.Fragment>
-        <AppAppBar />
-        <AppForm>
-          <React.Fragment>
-            <Typography variant="h3" gutterBottom marked="center" align="center">
-              Sign Up
-            </Typography>
-            <Typography variant="body2" align="center">
-              <Link href="/signin">
-                Already have an account?
-              </Link>
-            </Typography>
-          </React.Fragment>
-          <Form
-            onSubmit={this.handleSubmit}
-            subscription={{ submitting: true }}
-            validate={this.validate}
-          >
-            {({ handleSubmit, submitting }) => (
-              <form onSubmit={handleSubmit} className={classes.form} noValidate>
-                <Grid container spacing={16}>
-                  <Grid item xs={12} sm={6}>
-                    <Field
-                      autoFocus
-                      component={RFTextField}
-                      autoComplete="fname"
-                      fullWidth
-                      label="First name"
-                      name="firstName"
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Field
-                      component={RFTextField}
-                      autoComplete="lname"
-                      fullWidth
-                      label="Last name"
-                      name="lastName"
-                      required
-                    />
-                  </Grid>
-                </Grid>
-                <Field
-                  autoComplete="email"
-                  component={RFTextField}
-                  disabled={submitting || sent}
-                  fullWidth
-                  label="Email"
-                  margin="normal"
-                  name="email"
-                  required
-                />
-                <Field
-                  fullWidth
-                  component={RFTextField}
-                  disabled={submitting || sent}
-                  required
-                  name="password"
-                  autoComplete="current-password"
-                  label="Password"
-                  type="password"
-                  margin="normal"
-                />
-                <FormSpy subscription={{ submitError: true }}>
-                  {({ submitError }) =>
-                    submitError ? (
-                      <FormFeedback className={classes.feedback} error>
-                        {submitError}
-                      </FormFeedback>
-                    ) : null
-                  }
-                </FormSpy>
-                <FormButton
-                  className={classes.button}
-                  disabled={submitting || sent}
-                  color="secondary"
-                  fullWidth
-                >
-                  {submitting || sent ? 'In progress…' : 'Sign Up'}
-                </FormButton>
-              </form>
-            )}
-          </Form>
-        </AppForm>
-        <AppFooter />
-      </React.Fragment>
-    );
+    <Col md={3} style={{ padding: "15px", margin: "auto" }}>
+      <h4>Sign Up</h4>
+      <Form onSubmit={ this.handleSubmit }>
+        <FormGroup>
+          <Label for="email">Username</Label>
+          <Input type="email" name="email" id="email" />
+        </FormGroup>
+        <FormGroup>
+          <Label for="password">Password</Label>
+          <Input type="password" name="password" id="password" />
+        </FormGroup>
+        <FormGroup>
+          <Label for="email">Email</Label>
+          <Input type="email" name="email" id="email" />
+        </FormGroup>
+        <FormGroup>
+          <Label for="email">Phone Number</Label>
+          <Input type="email" name="email" id="email" />
+        </FormGroup>
+        <FormGroup>
+          <Label for="email">Date of Birth</Label>
+          <Input type="email" name="email" id="email" />
+        </FormGroup>
+        <FormGroup>
+          <Button>Sign Up</Button>
+        </FormGroup>
+      </Form>
+    </Col>
+    )
   }
+
 }
-
-SignUp.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default compose(
-  withRoot,
-  withStyles(styles),
-)(SignUp);

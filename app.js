@@ -19,6 +19,7 @@ fastify
     fastify.next('/game/:gameId/join', require('./backend/game/join'));
     fastify.next('/game/create', require('./backend/game/create'));
     fastify.next('/game/my-games', require('./backend/game/my-games'));
+    fastify.next('/game/:gameId', require('./backend/game/profile'));
 
     // Users
     fastify.next('/user/profile', require('./backend/user/profile'));
@@ -26,6 +27,7 @@ fastify
     // Banking Services
     fastify.next('/deposit', require('./backend/wallet/deposit'));
     fastify.next('/withdraw', require('./backend/wallet/withdraw'));
+    fastify.next('/wallet', require('./backend/wallet'));
 
   });
 
@@ -48,7 +50,7 @@ fastify.register(require('./backend/postInvite'));
 
 
 
-fastify.listen(3000, err => {
+fastify.listen(8080, err => {
   if (err) throw err;
-  console.log('Server listening on 3000');
+  console.log('Server listening on 8080');
 });
