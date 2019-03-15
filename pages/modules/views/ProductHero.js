@@ -3,11 +3,13 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Link from '@material-ui/core/Link';
 import Button from '../components/Button';
+import TextField from '../components/TextField';
+import Snackbar from '../components/Snackbar';
 import Typography from '../components/Typography';
 import ProductHeroLayout from './ProductHeroLayout';
 
 const backgroundImage =
-  'https://images.unsplash.com/photo-1534854638093-bada1813ca19?auto=format&fit=crop&w=1400&q=80';
+  'http://i.imgur.com/uNn7tqw.png';
 
 const styles = theme => ({
   background: {
@@ -16,7 +18,16 @@ const styles = theme => ({
     backgroundPosition: 'center',
   },
   button: {
-    minWidth: 200,
+    width: 200,
+  },
+  card: {
+    display: 'flex',
+    justifyContent: 'center',
+    backgroundColor: theme.palette.warning.main,
+    padding: `${theme.spacing.unit * 4}px ${theme.spacing.unit * 3}px`,
+  },
+  cardContent: {
+    maxWidth: 400,
   },
   h5: {
     marginBottom: theme.spacing.unit * 4,
@@ -30,35 +41,62 @@ const styles = theme => ({
   },
 });
 
-function ProductHero(props) {
-  const { classes } = props;
+class ProductHero extends React.Component {
+
+  state = {
+    open: false,
+  };
+
+  handleSubmit = event => {
+    event.preventDefault();
+    this.setState({
+      open: true,
+    });
+  };
+
+  handleClose = () => {
+    this.setState({
+      open: false,
+    });
+  };
+
+  render () {
+    const { classes } = this.props;
 
   return (
     <ProductHeroLayout backgroundClassName={classes.background}>
       {/* Increase the network loading priority of the background image. */}
       <img style={{ display: 'none' }} src={backgroundImage} alt="" />
       <Typography color="inherit" align="center" variant="h2" marked="center">
-        Upgrade your Sundays
+        Bet On Your Skills
       </Typography>
       <Typography color="inherit" align="center" variant="h5" className={classes.h5}>
-        Enjoy secret offers up to -70% off the best luxury hotels every Sunday.
+        GGChamp is a peer-to-peer website that allows players to bet against each other on their own terms
       </Typography>
-      <Button
-        color="secondary"
-        variant="contained"
-        size="large"
-        className={classes.button}
-        component={linkProps => (
-          <Link prefetch {...linkProps} href="/signup" variant="button" />
-        )}
-      >
-        Register
-      </Button>
+      <div className={classes.card}>
+              <form onSubmit={this.handleSubmit} className={classes.cardContent}>
+                <TextField noBorder className={classes.textField} placeholder="Your email" />
+                <Button
+                  type="submit"
+                  color="primary"
+                  variant="contained"
+                  className={classes.button}
+                >
+                  JOIN OUR BETA
+                </Button>
+              </form>
+            </div>
       <Typography variant="body2" color="inherit" className={classes.more}>
-        Discover the experience
+        Terms and Conditions Apply
       </Typography>
+      <Snackbar
+          open={this.state.open}
+          onClose={this.handleClose}
+          message="We will send you an invitation to our Beta!"
+        />
     </ProductHeroLayout>
   );
+  }
 }
 
 ProductHero.propTypes = {

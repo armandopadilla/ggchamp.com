@@ -22,7 +22,7 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'center',
     backgroundColor: theme.palette.warning.main,
-    padding: `${theme.spacing.unit * 8}px ${theme.spacing.unit * 3}px`,
+    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`,
   },
   cardContent: {
     maxWidth: 400,
