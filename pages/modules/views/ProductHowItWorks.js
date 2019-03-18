@@ -72,12 +72,12 @@ function ProductHowItWorks(props) {
               <div className={classes.item}>
                 <div className={classes.number}>1.</div>
                 <img
-                  src="https://s3-us-west-1.amazonaws.com/ggchampassets/productHowItWorks1.svg"
+                  src="https://s3-us-west-1.amazonaws.com/ggchampassets/productHowItWorks3.svg"
                   alt="suitcase"
                   className={classes.image}
                 />
                 <Typography variant="h5" align="center">
-                  Appointment every Wednesday 9am.
+                  Tell us your match ID, invite friends to join
                 </Typography>
               </div>
             </Grid>
@@ -90,7 +90,7 @@ function ProductHowItWorks(props) {
                   className={classes.image}
                 />
                 <Typography variant="h5" align="center">
-                  First come, first served. Our offers are in limited quantities, so be quick.
+                  Place money on the match
                 </Typography>
               </div>
             </Grid>
@@ -98,19 +98,19 @@ function ProductHowItWorks(props) {
               <div className={classes.item}>
                 <div className={classes.number}>3.</div>
                 <img
-                  src="https://s3-us-west-1.amazonaws.com/ggchampassets/productHowItWorks3.svg"
+                  src="https://s3-us-west-1.amazonaws.com/ggchampassets/productHowItWorks1.svg"
                   alt="clock"
                   className={classes.image}
                 />
                 <Typography variant="h5" align="center">
-                  {'New offers every week. New experiences, new surprises. '}
-                  {'Your Sundays will no longer be alike.'}
+                  {'Our system detects ending of match, winners are awarded!'}
+                  {/* {'Your Sundays will no longer be alike.'} */}
                 </Typography>
               </div>
             </Grid>
           </Grid>
         </div>
-        <Button
+        {/* <Button
           color="secondary"
           size="large"
           variant="contained"
@@ -120,7 +120,7 @@ function ProductHowItWorks(props) {
           )}
         >
           Get started
-        </Button>
+        </Button> */}
       </LayoutBody>
     </section>
   );

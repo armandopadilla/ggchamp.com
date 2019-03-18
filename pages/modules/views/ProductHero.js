@@ -68,7 +68,7 @@ class ProductHero extends React.Component {
       {/* Increase the network loading priority of the background image. */}
       <img style={{ display: 'none' }} src={backgroundImage} alt="" />
       <Typography color="inherit" align="center" variant="h2" marked="center">
-        Bet On Your Skills
+        League of Legends™ Peer-to-Peer Betting
       </Typography>
       <Typography color="inherit" align="center" variant="h5" className={classes.h5}>
         GGChamp is a peer-to-peer website that allows players to bet against each other on their own terms

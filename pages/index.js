@@ -20,8 +20,8 @@ function Index() {
       {/* <ProductCategories /> */}
       <ProductHowItWorks />
       {/* <ProductCTA /> */}
-      <ProductSmokingHero />
-      <AppFooter />
+      {/* <ProductSmokingHero /> */}
+      {/* <AppFooter /> */}
     </React.Fragment>
     );
 }
