@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import MailchimpSubscribe from 'react-mailchimp-subscribe';
 import { withStyles } from '@material-ui/core/styles';
 import Link from '@material-ui/core/Link';
 import Button from '../components/Button';
@@ -10,6 +11,62 @@ import ProductHeroLayout from './ProductHeroLayout';
 
 const backgroundImage =
   'http://i.imgur.com/uNn7tqw.png';
+
+const url = 'https://ggchamp.us20.list-manage.com/subscribe/post?u=afa1370e4992538f5dc578b0c&amp;id=48f30c6477';
+
+const CustomForm = ({ status, message, onValidated }) => {
+  let email, name;
+  const submit = () =>
+    email &&
+    name &&
+    email.value.indexOf("@") > -1 &&
+    onValidated({
+      EMAIL: email.value,
+      NAME: name.value
+    });
+
+  return (
+    <div
+      style={{
+        background: "#ffc071",
+        borderRadius: 2,
+        padding: 10,
+        display: "inline-block"
+      }}
+    >
+      {status === "sending" && <div style={{ color: "blue" }}>sending...</div>}
+      {status === "error" && (
+        <div
+          style={{ color: "red" }}
+          dangerouslySetInnerHTML={{ __html: message }}
+        />
+      )}
+      {status === "success" && (
+        <div
+          style={{ color: "green" }}
+          dangerouslySetInnerHTML={{ __html: message }}
+        />
+      )}
+      <input
+        style={{ fontSize: "2em", padding: 5 }}
+        ref={node => (name = node)}
+        type="text"
+        placeholder="Name"
+      />
+      <br />
+      <input
+        style={{ fontSize: "2em", padding: 5 }}
+        ref={node => (email = node)}
+        type="email"
+        placeholder="Email"
+      />
+      <br />
+      <button style={{ fontSize: "2em", padding: 5 }} onClick={submit}>
+        Sign up for our Beta!
+      </button>
+    </div>
+  );
+};
 
 const styles = theme => ({
   background: {
@@ -74,17 +131,20 @@ class ProductHero extends React.Component {
         GGChamp is a peer-to-peer website that allows players to bet against each other on their own terms
       </Typography>
       <div className={classes.card}>
-              <form onSubmit={this.handleSubmit} className={classes.cardContent}>
-                <TextField noBorder className={classes.textField} placeholder="Your email" />
-                <Button
-                  type="submit"
-                  color="primary"
-                  variant="contained"
-                  className={classes.button}
-                >
-                  JOIN OUR BETA
-                </Button>
-              </form>
+      <div>
+        {/* <MailchimpSubscribe url={url} /> */}
+        {/* <h2>Custom Form</h2> */}
+        <MailchimpSubscribe
+          url={url}
+          render={({ subscribe, status, message }) => (
+            <CustomForm
+              status={status}
+              message={message}
+              onValidated={formData => subscribe(formData)}
+            />
+          )}
+        />
+</div>
             </div>
       <Typography variant="body2" color="inherit" className={classes.more}>
         Terms and Conditions Apply
