@@ -16,12 +16,12 @@ function Index() {
       <React.Fragment>
       <AppAppBar />
       <ProductHero />
-      <ProductValues />
-      <ProductCategories />
+      {/* <ProductValues /> */}
+      {/* <ProductCategories /> */}
       <ProductHowItWorks />
-      <ProductCTA />
-      <ProductSmokingHero />
-      <AppFooter />
+      {/* <ProductCTA /> */}
+      {/* <ProductSmokingHero /> */}
+      {/* <AppFooter /> */}
     </React.Fragment>
     );
 }

@@ -13,7 +13,7 @@ const footerStyle = {
 export default () => {
   return (
     <div style={footerStyle}>
-      <div>xxxxxvyyy.com copyright 2019-infinity</div>
+      <div>ggchamp.com copyright 2019-infinity</div>
       <div>Terms of Use | Privacy Policy</div>
     </div>
   )
