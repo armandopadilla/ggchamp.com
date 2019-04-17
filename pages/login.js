@@ -1,30 +1,59 @@
 import React, { Component } from 'react';
-import { Row, Col, Form, FormGroup, Label, Input, Button } from 'reactstrap'
+import {
+  Row,
+  Col,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Button,
+  Alert
+} from 'reactstrap'
 import axios from 'axios';
+import Link from 'next/link';
 
 export default class Login extends Component {
 
   state = {
     email: '',
-    password: ''
+    password: '',
+    isInvalidLogin: null,
   };
 
   handleInputChange = (e) => {
+    this.setState({ isInvalidLogin: null });
+
     const { id, value } = e.target;
     this.setState({[id]: value});
   };
 
-  handleOnSubmit = (e) => {
+  handleOnSubmit = async (e) => {
     e.preventDefault();
 
-    // Shoot off the request .
-    // axios.post()
+    try {
+      const results = await axios.post('http://localhost:3000/v1/auth/login', this.state);
+
+      const token = results.data.data;
+
+      // We need an AppKey to know its coming from THIS app.
+
+      document.cookie = `token=${token}`;
+      window.location = '/home';
+
+    } catch (e) {
+      this.setState({ isInvalidLogin: true });
+    }
+  };
+
+  showAlert = () => {
+    return (this.state.isInvalidLogin) ? (<Alert color="danger">Username and/or Password not valid.</Alert>) : null;
   };
 
   render () {
     return (
-      <Col md={2} offset={5} style={{ padding: "15px", margin: "auto" }}>
-        <h4>Log In</h4>
+      <Col md={3} offset={5} style={{ padding: "15px", margin: "auto" }}>
+        <h3>Log In</h3>
+        { this.showAlert() }
         <Form onSubmit={this.handleOnSubmit}>
           <FormGroup>
             <Label for="email">Email</Label>
@@ -35,9 +64,14 @@ export default class Login extends Component {
             <Input type="password" name="password" id="password" onChange={this.handleInputChange} />
           </FormGroup>
           <FormGroup>
-            <Button>Log In</Button>
+            <Button block>Log In</Button>
           </FormGroup>
         </Form>
+          <div>
+            <hr />
+            <div style={{ textAlign: 'center' }}>or</div>
+            <div style={{ textAlign: 'center' }} ><Link href="signup">Create An Account</Link></div>
+          </div>
       </Col>
     )
   }

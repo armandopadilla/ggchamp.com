@@ -18,6 +18,7 @@ fastify
     // Games
     fastify.next('/game/:gameId/join', require('./backend/game/join'));
     fastify.next('/game/create', require('./backend/game/create'));
+    fastify.next('/game/create-thankyou', require('./backend/game/create-thankyou'));
     fastify.next('/game/my-games', require('./backend/game/my-games'));
     fastify.next('/game/:gameId', require('./backend/game/profile'));
 

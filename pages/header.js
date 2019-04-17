@@ -10,7 +10,11 @@ import {
   ModalBody,
   ModalHeader,
   ModalFooter,
-  Button
+  Button,
+  Form,
+  FormGroup,
+  Label,
+  Input,
 } from 'reactstrap';
 
 
@@ -50,6 +54,9 @@ export default class Header extends React.Component {
             <NavLink href="/user/profile">Earnings To Date: $2,345.00</NavLink>
           </NavItem>
           <NavItem>
+            <NavLink href="/home">Match Lobby</NavLink>
+          </NavItem>
+          <NavItem>
             <NavLink href="/wallet">Your Wallet</NavLink>
           </NavItem>
           <NavItem>
@@ -74,12 +81,39 @@ export default class Header extends React.Component {
         { nav }
 
         <Modal isOpen={this.state.inviteModal} toggle={this.toggleInviteModal}>
-          <ModalHeader toggle={this.toggleInviteModal}>Invite Friends</ModalHeader>
+          <ModalHeader toggle={this.toggleInviteModal}>Invite Your Players</ModalHeader>
           <ModalBody>
+
+            <Form onSubmit={ this.handleSubmit }>
+              <FormGroup>
+                <Label for="amount">Player Phone/Email</Label>
+                <Input type="amount" name="amount" id="amount" onChange={this.handleInputChange} />
+              </FormGroup>
+              <FormGroup>
+                <Label for="amount">Player Phone/Email</Label>
+                <Input type="amount" name="amount" id="amount" onChange={this.handleInputChange} />
+              </FormGroup>
+              <FormGroup>
+                <Label for="amount">Player Phone/Email</Label>
+                <Input type="amount" name="amount" id="amount" onChange={this.handleInputChange} />
+              </FormGroup>
+              <FormGroup>
+                <Label for="amount">Player Phone/Email</Label>
+                <Input type="amount" name="amount" id="amount" onChange={this.handleInputChange} />
+              </FormGroup>
+              <FormGroup>
+                <Label for="amount">Player Phone/Email</Label>
+                <Input type="amount" name="amount" id="amount" onChange={this.handleInputChange} />
+              </FormGroup>
+              <FormGroup>
+                <Label for="amount">Player Phone/Email</Label>
+                <Input type="amount" name="amount" id="amount" onChange={this.handleInputChange} />
+              </FormGroup>
+            </Form>
 
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.toggleInviteModal}>Invite</Button>{' '}
+            <Button color="primary" onClick={this.toggleInviteModal}>Invite Players</Button>{' '}
           </ModalFooter>
         </Modal>
       </Navbar>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Link from 'next/link';
 import {
+  Row,
   Col,
   Table,
   Modal,
@@ -25,11 +26,11 @@ export default class Home extends Component {
       { id: '12313123123', name: 'At your moms', title: 'League of Legends', matchType: '3v3', entries: '1/6', entryAmount: 25, startDateTime: 'Feb 23rd, 2019 4:00PM Pacific', maxParticipants: 6},
       { id: '12313123123', name: 'Match 123', title: 'League of Legends', matchType: '3v3', entries: '3/6', entryAmount: 25, startDateTime: 'Feb 23rd, 2019 4:00PM Pacific', maxParticipants: 6},
       { id: '12313123123', name: 'Rubber duck escapades', title: 'League of Legends', matchType: '5v5', entries: '2/10', entryAmount: 5, startDateTime: 'Feb 23rd, 2019 4:00PM Pacific', maxParticipants: 10},
-      { id: '12313123123', name: 'Hampsters in your face', title: 'League of Legends', matchType: '5v5', entries: '1/10', entryAmount: 5, startDateTime: 'Feb 23rd, 2019 4:00PM Pacific', maxParticipants: 10},
-      { id: '12313123123', name: 'Match 4543564', title: 'League of Legends', matchType: '5v5', entries: '2/10', entryAmount: 15, startDateTime: 'Feb 23rd, 2019 4:00PM Pacific', maxParticipants: 10},
-      { id: '12313123123', name: 'Rubber duck escapades', title: 'League of Legends', matchType: '5v5', entries: '2/10', entryAmount: 5, startDateTime: 'Feb 23rd, 2019 4:00PM Pacific', maxParticipants: 10},
-      { id: '12313123123', name: 'Hampsters in your face', title: 'League of Legends', matchType: '5v5', entries: '1/10', entryAmount: 5, startDateTime: 'Feb 23rd, 2019 4:00PM Pacific', maxParticipants: 10},
-      { id: '12313123123', name: 'Match 4543564', title: 'League of Legends', matchType: '5v5', entries: '2/10', entryAmount: 15, startDateTime: 'Feb 23rd, 2019 4:00PM Pacific', maxParticipants: 10},
+    ];
+
+    this.myMatches = [
+      { id: '12313123123', name: 'BrosvsBros', title: 'League of Legends', matchType: '3v3', entries: '1/6', entryAmount: 5, startDateTime: 'Feb 23rd, 2019 4:00PM Pacific', maxParticipants: 6},
+      { id: '12313123123', name: 'Come at me bro', title: 'League of Legends', matchType: '5v5', entries: '2/10', entryAmount: 15, startDateTime: 'Feb 23rd, 2019 4:00PM Pacific', maxParticipants: 10},
     ];
   }
 
@@ -61,11 +62,31 @@ export default class Home extends Component {
     )
   };
 
+
+  getMyMatchesDataRows = () => {
+    return this.myMatches.map((game) => (
+      <tr key={game.id}>
+        <td><Link href={`/game/${game.id}`}>{game.name}</Link></td>
+        <td>{game.title}</td>
+        <td>{game.matchType}</td>
+        <td>{game.entries}</td>
+        <td>${game.entryAmount.toFixed(2)}</td>
+        <td>${(game.entryAmount * game.maxParticipants).toFixed(2)}</td>
+        <td>{game.startDateTime}</td>
+        <td><Button onClick={this.toggleJoinModal}>Join</Button></td>
+      </tr>)
+    )
+  };
+
   render () {
 
     return (
       <Col md={10} style={{ padding: "15px", margin: "auto" }}>
-        <h2>Public Matches</h2>
+        <h2>Match Lobby</h2>
+
+        <Row>
+          <Col>
+            <h4>My Matches</h4>
         <Table striped>
           <thead>
           <tr>
@@ -80,9 +101,35 @@ export default class Home extends Component {
           </tr>
           </thead>
           <tbody>
-            { this.getDataRows() }
+          { this.getMyMatchesDataRows() }
           </tbody>
         </Table>
+          </Col>
+        </Row>
+
+
+        <Row>
+        <Col>
+          <h4>Public Matches</h4>
+          <Table striped>
+            <thead>
+            <tr>
+              <th>Match Name</th>
+              <th>Game Title</th>
+              <th>Match Type</th>
+              <th>Entries</th>
+              <th>Entry Amount</th>
+              <th>Pot</th>
+              <th>Start Date Time</th>
+              <th>Options</th>
+            </tr>
+            </thead>
+            <tbody>
+              { this.getDataRows() }
+            </tbody>
+          </Table>
+        </Col>
+        </Row>
 
         <Modal isOpen={this.state.joinModal} toggle={this.toggleJoinModal}>
           <ModalHeader toggle={this.toggleJoinModal}>Join Game</ModalHeader>
