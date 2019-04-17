@@ -14,7 +14,6 @@ export default () => {
   return (
     <div style={footerStyle}>
       <div>ggchamp.com copyright 2019-infinity</div>
-      <div>Terms of Use | Privacy Policy</div>
     </div>
   )
 }
