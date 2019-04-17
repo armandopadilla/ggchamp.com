@@ -44,8 +44,8 @@ const styles = theme => ({
     zIndex: -2,
   },
   arrowDown: {
-    position: 'absolute',
-    bottom: theme.spacing.unit * 4,
+    position: 'relative',
+    top: theme.spacing.unit * 2.5,
   },
 });
 
@@ -67,8 +67,8 @@ function ProductHeroLayout(props) {
         <img
           className={classes.arrowDown}
           src="https://s3-us-west-1.amazonaws.com/ggchampassets/productHeroArrowDown.png"
-          height="16"
-          width="12"
+          height="32"
+          width="24"
           alt="arrow down"
         />
       </LayoutBody>
