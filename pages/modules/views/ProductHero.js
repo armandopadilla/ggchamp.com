@@ -8,6 +8,7 @@ import TextField from '../components/TextField';
 import Snackbar from '../components/Snackbar';
 import Typography from '../components/Typography';
 import ProductHeroLayout from './ProductHeroLayout';
+import { lightBlue } from '@material-ui/core/colors';
 
 const backgroundImage =
   'http://i.imgur.com/uNn7tqw.png';
@@ -28,22 +29,22 @@ const CustomForm = ({ status, message, onValidated }) => {
   return (
     <div
       style={{
-        background: "#ffc071",
+        // background: "#1bc6c1",
         borderRadius: 2,
         padding: 10,
-        display: "inline-block"
+        display: "inline-block",
       }}
     >
-      {status === "sending" && <div style={{ color: "blue" }}>sending...</div>}
+      {status === "sending" && <div style={{ fontSize: "30px", color: "blue" }}>sending...</div>}
       {status === "error" && (
         <div
-          style={{ color: "red" }}
+          style={{ fontSize: "30px", color: "red" }}
           dangerouslySetInnerHTML={{ __html: message }}
         />
       )}
       {status === "success" && (
         <div
-          style={{ color: "green" }}
+          style={{ fontSize: "80px", color: "white" }}
           dangerouslySetInnerHTML={{ __html: message }}
         />
       )}
@@ -54,6 +55,7 @@ const CustomForm = ({ status, message, onValidated }) => {
         placeholder="Name"
       />
       <br />
+      <br />
       <input
         style={{ fontSize: "2em", padding: 5 }}
         ref={node => (email = node)}
@@ -61,7 +63,8 @@ const CustomForm = ({ status, message, onValidated }) => {
         placeholder="Email"
       />
       <br />
-      <button style={{ fontSize: "2em", padding: 5 }} onClick={submit}>
+      <br />
+      <button align='center' style={{ background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',borderColor: 'black', borderRadius: 5, fontSize: "2em", padding: 5 }} onClick={submit}>
         Sign up for our Beta!
       </button>
     </div>
@@ -71,7 +74,7 @@ const CustomForm = ({ status, message, onValidated }) => {
 const styles = theme => ({
   background: {
     backgroundImage: `url(${backgroundImage})`,
-    backgroundColor: '#7fc7d9', // Average color of the background image.
+    // backgroundColor: '#1bc6c1', // Average color of the background image.
     backgroundPosition: 'center',
   },
   button: {
@@ -80,7 +83,7 @@ const styles = theme => ({
   card: {
     display: 'flex',
     justifyContent: 'center',
-    backgroundColor: theme.palette.warning.main,
+    // background: '#1bc6c1',
     padding: `${theme.spacing.unit * 4}px ${theme.spacing.unit * 3}px`,
   },
   cardContent: {

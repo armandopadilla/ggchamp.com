@@ -75,7 +75,7 @@ function AppAppBar(props) {
           </div>
         </Toolbar>
       </AppBar>
-      <div className={classes.placeholder} />
+      {/* <div className={classes.placeholder} /> */}
     </div>
   );
 }
