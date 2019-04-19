@@ -1,12 +1,23 @@
+import ReactGA from 'react-ga';
 import React from 'react';
 import App, { Container } from 'next/app';
 import Header from './header';
 import Footer from './footer';
 
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+function initializeReactGA() {
+  ReactGA.initialize('UA-136536235-1');
+  ReactGA.pageview('/home');
+};
+
+
 export default class MyApp extends App {
+
   static async getInitialProps({ Component, router, ctx }) {
+    initializeReactGA();
+
     let pageProps = {};
 
     if (Component.getInitialProps) {
