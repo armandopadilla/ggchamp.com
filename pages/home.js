@@ -94,8 +94,8 @@ export default class Home extends Component {
           <td>{game.title}</td>
           <td>{game.matchType}</td>
           <td>{game.entries}</td>
-          <td>${game.entryAmount.toFixed(2)}</td>
-          <td>${(game.entryAmount * game.maxParticipants).toFixed(2)}</td>
+          <td>${game.entryFee.toFixed(2)}</td>
+          <td>${(game.entryFee * game.maxParticipants).toFixed(2)}</td>
           <td>{game.startDateTime}</td>
           <td><Button onClick={this.toggleJoinModal}>Join</Button></td>
         </tr>)

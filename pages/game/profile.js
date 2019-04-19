@@ -22,7 +22,25 @@ const stylez = {
 
 export default class Profile extends Component {
 
+  static async getInitialProps ({ query }) {
+    return {
+      game: query.game
+    }
+  };
+
   render () {
+
+    console.log(this.props.game);
+
+    const playerTableInfo = this.props.game.playersInfo.map((player) => {
+      return (
+        <tr>
+          <td>{ player.username }</td>
+          <td>{ player.stats.winPercent }%</td>
+        </tr>
+      )
+    })
+
     return (
       <Col md={10} style={{ padding: "15px", margin: "auto" }}>
         <Row>
@@ -30,12 +48,12 @@ export default class Profile extends Component {
             <Card>
               <CardImg top width="100%" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=318%C3%97180&w=318&h=180" alt="Card image cap" />
               <CardBody>
-                <CardTitle>Rabbit Raccoons Game</CardTitle>
-                <CardSubtitle>League of Legends</CardSubtitle>
+                <CardTitle>{ this.props.game.name }</CardTitle>
+                <CardSubtitle>{ this.props.game.title }</CardSubtitle>
                 <CardText>
-                  3 v 3
-                  Entry Fee: $35.00
-                  Pot: $210.00 (minus transaction fee)
+                  <div>{ this.props.game.matchType }</div>
+                  <div>Entry Fee: ${ this.props.game.entryFee.toFixed(2) }</div>
+                  <div>Max Pot: ${ (this.props.game.entryFee * this.props.game.maxParticipants).toFixed(2) } (minus transaction fee)</div>
                 </CardText>
               </CardBody>
             </Card>
@@ -51,30 +69,7 @@ export default class Profile extends Component {
                   </tr>
                   </thead>
                   <tbody>
-                  <tr>
-                    <td>Duck with a spoon</td>
-                    <td>20%</td>
-                  </tr>
-                  <tr>
-                    <td>Teemos Memos</td>
-                    <td>45%</td>
-                  </tr>
-                  <tr>
-                    <td>DariusFork</td>
-                    <td>51%</td>
-                  </tr>
-                  <tr>
-                    <td>drtwlf</td>
-                    <td>60%</td>
-                  </tr>
-                  <tr>
-                    <td>uberscloobers</td>
-                    <td>48%</td>
-                  </tr>
-                  <tr>
-                    <td>Saynothing</td>
-                    <td>10%</td>
-                  </tr>
+                  { playerTableInfo }
                   </tbody>
                 </Table>
               </Col>
