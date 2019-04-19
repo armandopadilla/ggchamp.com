@@ -1,0 +1,2 @@
+ <td>${game.entryAmount.toFixed(2)}</td>
+        <td>${(game.entryAmount * game.maxParticipants).toFixed(2)}</td>

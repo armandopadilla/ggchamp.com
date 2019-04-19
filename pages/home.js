@@ -15,9 +15,12 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
 
+    console.log(props);
     this.state = {
       joinModal: false,
       inviteModal: false,
+      lobbyData: props.lobbyData,
+      myGames: props.myGames,
     };
 
     this.data = [
@@ -47,16 +50,31 @@ export default class Home extends Component {
     // Grab the matches from the api
   }
 
+  static async getInitialProps({ query }) {
+    return {
+      lobbyData: query.lobbyData,
+      myGames: query.myGames
+
+    }
+  }
+
   getDataRows = () => {
-    return this.data.map((game) => (
-      <tr key={game.id}>
-        <td><Link href={`/game/${game.id}`}>{game.name}</Link></td>
+    return this.state.lobbyData.map((game) => (
+      <tr key={game._id}>
+        <td><Link href={`/game/${game._id}`}>{game.name}</Link></td>
         <td>{game.title}</td>
         <td>{game.matchType}</td>
-        <td>{game.entries}</td>
-        <td>${game.entryAmount.toFixed(2)}</td>
-        <td>${(game.entryAmount * game.maxParticipants).toFixed(2)}</td>
-        <td>{game.startDateTime}</td>
+        <td>{game.participants.length}</td>
+        <td>${game.entryFee.toFixed(2)}</td>
+        <td>${(game.entryFee * game.maxParticipants).toFixed(2)}</td>
+        <td>{new Date(game.startDateTime).toLocaleDateString('en-US', {
+          weekday: "short",
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric"
+        })}</td>
         <td><Button onClick={this.toggleJoinModal}>Join</Button></td>
       </tr>)
     )
@@ -64,22 +82,28 @@ export default class Home extends Component {
 
 
   getMyMatchesDataRows = () => {
-    return this.myMatches.map((game) => (
-      <tr key={game.id}>
-        <td><Link href={`/game/${game.id}`}>{game.name}</Link></td>
-        <td>{game.title}</td>
-        <td>{game.matchType}</td>
-        <td>{game.entries}</td>
-        <td>${game.entryAmount.toFixed(2)}</td>
-        <td>${(game.entryAmount * game.maxParticipants).toFixed(2)}</td>
-        <td>{game.startDateTime}</td>
-        <td><Button onClick={this.toggleJoinModal}>Join</Button></td>
-      </tr>)
-    )
+    if (!this.state.myGames.length) {
+      return (
+        <tr><td>You havent joined any games</td></tr>
+      )
+    }
+    else {
+      return this.state.myGames.map((game) => (
+        <tr key={game._id}>
+          <td><Link href={`/game/${game._id}`}>{game.name}</Link></td>
+          <td>{game.title}</td>
+          <td>{game.matchType}</td>
+          <td>{game.entries}</td>
+          <td>${game.entryAmount.toFixed(2)}</td>
+          <td>${(game.entryAmount * game.maxParticipants).toFixed(2)}</td>
+          <td>{game.startDateTime}</td>
+          <td><Button onClick={this.toggleJoinModal}>Join</Button></td>
+        </tr>)
+      )
+    }
   };
 
   render () {
-
     return (
       <Col md={10} style={{ padding: "15px", margin: "auto" }}>
         <h2>Match Lobby</h2>

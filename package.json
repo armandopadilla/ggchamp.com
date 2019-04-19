@@ -26,6 +26,8 @@
     "react-dom": "^16.8.1",
     "react-final-form": "^4.0.2",
     "reactstrap": "^7.1.0",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4",
     "react-ga": "^2.5.7",
     "react-mailchimp-subscribe": "^2.1.0",
     "validator": "^10.11.0"
