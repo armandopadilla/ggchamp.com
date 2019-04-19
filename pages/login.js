@@ -33,7 +33,7 @@ export default class Login extends Component {
     try {
       const results = await axios.post('http://localhost:3000/v1/auth/login', this.state);
 
-      const token = results.data.data;
+      const token = results.data.data.token;
 
       // We need an AppKey to know its coming from THIS app.
 

@@ -20,6 +20,7 @@ export default class Home extends Component {
       joinModal: false,
       inviteModal: false,
       lobbyData: props.lobbyData,
+      myGames: props.myGames,
     };
 
     this.data = [
@@ -51,14 +52,16 @@ export default class Home extends Component {
 
   static async getInitialProps({ query }) {
     return {
-      lobbyData: query.lobbyData
+      lobbyData: query.lobbyData,
+      myGames: query.myGames
+
     }
   }
 
   getDataRows = () => {
     return this.state.lobbyData.map((game) => (
-      <tr key={game.id}>
-        <td><Link href={`/game/${game.id}`}>{game.name}</Link></td>
+      <tr key={game._id}>
+        <td><Link href={`/game/${game._id}`}>{game.name}</Link></td>
         <td>{game.title}</td>
         <td>{game.matchType}</td>
         <td>{game.participants.length}</td>
@@ -79,18 +82,25 @@ export default class Home extends Component {
 
 
   getMyMatchesDataRows = () => {
-    return this.myMatches.map((game) => (
-      <tr key={game.id}>
-        <td><Link href={`/game/${game.id}`}>{game.name}</Link></td>
-        <td>{game.title}</td>
-        <td>{game.matchType}</td>
-        <td>{game.entries}</td>
-        <td>${game.entryAmount.toFixed(2)}</td>
-        <td>${(game.entryAmount * game.maxParticipants).toFixed(2)}</td>
-        <td>{game.startDateTime}</td>
-        <td><Button onClick={this.toggleJoinModal}>Join</Button></td>
-      </tr>)
-    )
+    if (!this.state.myGames.length) {
+      return (
+        <tr><td>You havent joined any games</td></tr>
+      )
+    }
+    else {
+      return this.state.myGames.map((game) => (
+        <tr key={game._id}>
+          <td><Link href={`/game/${game._id}`}>{game.name}</Link></td>
+          <td>{game.title}</td>
+          <td>{game.matchType}</td>
+          <td>{game.entries}</td>
+          <td>${game.entryAmount.toFixed(2)}</td>
+          <td>${(game.entryAmount * game.maxParticipants).toFixed(2)}</td>
+          <td>{game.startDateTime}</td>
+          <td><Button onClick={this.toggleJoinModal}>Join</Button></td>
+        </tr>)
+      )
+    }
   };
 
   render () {
