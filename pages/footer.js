@@ -15,7 +15,7 @@ const footerStyle = {
 export default () => {
   return (
     <div style={footerStyle}>
-      <div>gtgchamp.com copyright 2019</div>
+      <div>ggchamp.com copyright 2019</div>
       <div>Terms of Use | Privacy Policy</div>
     </div>
   )
