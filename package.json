@@ -11,6 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@material-ui/core": "^3.9.2",
+    "@material-ui/icons": "^3.0.2",
     "@zeit/next-css": "^1.0.1",
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
@@ -26,6 +28,8 @@
     "reactstrap": "^7.1.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
+    "react-ga": "^2.5.7",
+    "react-mailchimp-subscribe": "^2.1.0",
     "validator": "^10.11.0"
   }
 }
