@@ -18,14 +18,19 @@ fastify
     // Games
     fastify.next('/game/:gameId/join', require('./backend/game/join'));
     fastify.next('/game/create', require('./backend/game/create'));
+    fastify.next('/game/create-thankyou', require('./backend/game/create-thankyou'));
     fastify.next('/game/my-games', require('./backend/game/my-games'));
+    fastify.next('/game/:gameId', require('./backend/game/profile'));
 
     // Users
     fastify.next('/user/profile', require('./backend/user/profile'));
 
-    // Banking Services
-    fastify.next('/deposit', require('./backend/wallet/deposit'));
-    fastify.next('/withdraw', require('./backend/wallet/withdraw'));
+    // Wallet Banking Services
+    fastify.next('/wallet/deposit', require('./backend/wallet/deposit'));
+    fastify.next('/wallet/deposit-thankyou', require('./backend/wallet/deposit-thankyou'));
+    fastify.next('/wallet/withdraw', require('./backend/wallet/withdraw'));
+    fastify.next('/wallet/withdraw-thankyou', require('./backend/wallet/withdraw-thankyou'));
+    fastify.next('/wallet', require('./backend/wallet'));
 
   });
 
@@ -40,15 +45,15 @@ fastify.register(require('./backend/game/postCreateGame'));
 // Reset Password
 fastify.register(require('./backend/postResetPassword'));
 // Deposit
-fastify.register(require('./backend/wallet/postDeposit'));
+//fastify.register(require('./backend/wallet/postDeposit'));
 // Withdraw
-fastify.register(require('./backend/wallet/postWithdraw'));
+//fastify.register(require('./backend/wallet/postWithdraw'));
 // Invite
 fastify.register(require('./backend/postInvite'));
 
 
 
-fastify.listen(3000, err => {
+fastify.listen(8080, err => {
   if (err) throw err;
-  console.log('Server listening on 3000');
+  console.log('Server listening on 8080');
 });

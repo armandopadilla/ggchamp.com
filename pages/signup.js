@@ -1,155 +1,119 @@
-import withRoot from './modules/withRoot';
-// --- Post bootstrap -----
-import React from 'react';
-import PropTypes from 'prop-types';
-import compose from 'recompose/compose';
-import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
+import React, { Component } from 'react';
+import {
+  Col,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Button,
+  Alert,
+} from 'reactstrap';
+import axios from 'axios';
 import Link from 'next/link';
-import { Field, Form, FormSpy } from 'react-final-form';
-import Typography from './modules/components/Typography';
-import AppFooter from './modules/views/AppFooter';
-import AppAppBar from './modules/views/AppAppBar';
-import AppForm from './modules/views/AppForm';
-import { email, required } from './modules/form/validation';
-import RFTextField from './modules/form/RFTextField';
-import FormButton from './modules/form/FormButton';
-import FormFeedback from './modules/form/FormFeedback';
 
-const styles = theme => ({
-  form: {
-    marginTop: theme.spacing.unit * 6,
-  },
-  button: {
-    marginTop: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 2,
-  },
-  feedback: {
-    marginTop: theme.spacing.unit * 2,
-  },
-});
+export default class Index extends Component {
 
-class SignUp extends React.Component {
   state = {
-    sent: false,
+    username: '',
+    password: '',
+    repassword: '',
+    email: '',
+    phone: '',
+    dob: '',
+    acceptedTerms: 'no',
+    isValid: null,
+    message: '',
+    submitted: false
   };
 
-  validate = values => {
-    const errors = required(['firstName', 'lastName', 'email', 'password'], values, this.props);
+  handleInputChange = (e) => {
+    const { id, value } = e.target;
+    this.setState({ [id]: value });
+  };
 
-    if (!errors.email) {
-      const emailError = email(values.email, values, this.props);
-      if (emailError) {
-        errors.email = email(values.email, values, this.props);
+  handleSubmit = async (e) => {
+    e.preventDefault();
+
+
+    // Check the passwords
+    if (this.state.password != this.state.repassword) {
+      this.setState({ isValid: false, message: 'Passwords do not match', submitted: true});
+    } else {
+      // update the date
+      const dob = new Date(this.state.dob);
+
+      this.setState({ dob, acceptedTerms: 'yes' }, async () => {
+        try {
+          const results = await axios.post('http://localhost:3000/v1/user', this.state);
+          this.setState({ isValid: true, submitted: true });
+        } catch (e) {
+          this.setState({ isValid: false, message: e.response.data.message, submitted: true })
+        }
+
+      });
+    }
+  };
+
+  render (){
+
+    let message = null;
+    if (this.state.submitted) {
+
+      message = (
+        <Alert color="success">
+          <strong>Success!</strong> Welcome to ggchamp.com<br />
+          Verify your email/phone number but you can still log in using the below <Link href="login">link</Link>.
+        </Alert>);
+
+      if (!this.state.isValid) {
+        message = (
+          <Alert color="danger">
+            <strong>Whoops!</strong> We found some issues with your info<br />
+            <ul><li>{this.state.message}</li></ul>
+          </Alert>);
       }
+
+
+
     }
 
-    return errors;
-  };
-
-  handleSubmit = () => {};
-
-  render() {
-    const { classes } = this.props;
-    const { sent } = this.state;
-
     return (
-      <React.Fragment>
-        <AppAppBar />
-        <AppForm>
-          <React.Fragment>
-            <Typography variant="h3" gutterBottom marked="center" align="center">
-              Sign Up
-            </Typography>
-            <Typography variant="body2" align="center">
-              <Link href="/signin">
-                Already have an account?
-              </Link>
-            </Typography>
-          </React.Fragment>
-          <Form
-            onSubmit={this.handleSubmit}
-            subscription={{ submitting: true }}
-            validate={this.validate}
-          >
-            {({ handleSubmit, submitting }) => (
-              <form onSubmit={handleSubmit} className={classes.form} noValidate>
-                <Grid container spacing={16}>
-                  <Grid item xs={12} sm={6}>
-                    <Field
-                      autoFocus
-                      component={RFTextField}
-                      autoComplete="fname"
-                      fullWidth
-                      label="First name"
-                      name="firstName"
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Field
-                      component={RFTextField}
-                      autoComplete="lname"
-                      fullWidth
-                      label="Last name"
-                      name="lastName"
-                      required
-                    />
-                  </Grid>
-                </Grid>
-                <Field
-                  autoComplete="email"
-                  component={RFTextField}
-                  disabled={submitting || sent}
-                  fullWidth
-                  label="Email"
-                  margin="normal"
-                  name="email"
-                  required
-                />
-                <Field
-                  fullWidth
-                  component={RFTextField}
-                  disabled={submitting || sent}
-                  required
-                  name="password"
-                  autoComplete="current-password"
-                  label="Password"
-                  type="password"
-                  margin="normal"
-                />
-                <FormSpy subscription={{ submitError: true }}>
-                  {({ submitError }) =>
-                    submitError ? (
-                      <FormFeedback className={classes.feedback} error>
-                        {submitError}
-                      </FormFeedback>
-                    ) : null
-                  }
-                </FormSpy>
-                <FormButton
-                  className={classes.button}
-                  disabled={submitting || sent}
-                  color="secondary"
-                  fullWidth
-                >
-                  {submitting || sent ? 'In progress…' : 'Sign Up'}
-                </FormButton>
-              </form>
-            )}
-          </Form>
-        </AppForm>
-        <AppFooter />
-      </React.Fragment>
-    );
+    <Col className="pageContainer" md={5} style={{ padding: "15px", margin: "auto" }}>
+      <h3 className="pageHeader">Sign Up</h3>
+      { message }
+      <Form onSubmit={ this.handleSubmit }>
+        <FormGroup>
+          <Label for="username">Username</Label>
+          <Input type="text" name="username" id="username" onChange={ this.handleInputChange } />
+        </FormGroup>
+        <FormGroup>
+          <Label for="password">Password</Label>
+          <Input type="password" name="password" id="password" onChange={ this.handleInputChange } />
+        </FormGroup>
+        <FormGroup>
+          <Label for="repassword">Re-Enter Password</Label>
+          <Input type="password" name="repassword" id="repassword" onChange={ this.handleInputChange }/>
+        </FormGroup>
+        <FormGroup>
+          <Label for="email">Email</Label>
+          <Input type="email" name="email" id="email" onChange={ this.handleInputChange } />
+        </FormGroup>
+        <FormGroup>
+          <Label for="phone">Phone Number</Label>
+          <Input type="phone" name="phome" id="phone" onChange={ this.handleInputChange } />
+        </FormGroup>
+        <FormGroup>
+          <Label for="dob">Date of Birth</Label>
+          <Input type="date" name="dob" id="dob" onChange={ this.handleInputChange } />
+        </FormGroup>
+        <FormGroup>
+          <hr />
+          <h5>By clicking "Sign Up" you agree to the Terms of Use.</h5>
+          <Button type="primary">Sign Up</Button>
+        </FormGroup>
+      </Form>
+    </Col>
+    )
   }
+
 }
-
-SignUp.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default compose(
-  withRoot,
-  withStyles(styles),
-)(SignUp);

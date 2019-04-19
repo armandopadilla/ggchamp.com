@@ -7,13 +7,16 @@ const footerStyle = {
   fontFamily: 'arial',
   textAlign: 'center',
   fontSize: '15px',
+  bottom: 0,
+  width: '100%'
 };
 
 
 export default () => {
   return (
     <div style={footerStyle}>
-      <div>ggchamp.com copyright 2019-infinity</div>
+      <div>ggchamp.com copyright 2019</div>
+      <div>Terms of Use | Privacy Policy</div>
     </div>
   )
 }
