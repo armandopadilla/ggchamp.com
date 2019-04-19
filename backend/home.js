@@ -20,6 +20,7 @@ module.exports = async (app, req, reply) => {
   // Fetch my matches
   const resMyData = await request(options);
   const myGames = JSON.parse(resMyData).data;
+  console.log(myGames);
 
   return app.render(req.raw, reply.res, '/home', { lobbyData, myGames }, {});
 };
