@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
-import Link from 'next/link';
 
-export default class Index extends Component {
+import ProductHero from './modules/views/ProductHero';
+import ProductHowItWorks from './modules/views/ProductHowItWorks';
+import AppAppBar from './modules/views/AppAppBar';
+import withRoot from './modules/withRoot';
 
-  render (){
-    return (<div>
-
-
-
-
-
-    </div>)
-  }
-
+function Index() {
+    return (
+      <React.Fragment>
+      <AppAppBar />
+      <ProductHero />
+      <ProductHowItWorks />
+    </React.Fragment>
+    );
 }
+
+export default withRoot(Index);
