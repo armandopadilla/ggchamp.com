@@ -15,26 +15,12 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
 
-    console.log(props);
     this.state = {
       joinModal: false,
       inviteModal: false,
       lobbyData: props.lobbyData,
       myGames: props.myGames,
     };
-
-    this.data = [
-      { id: '12313123123', name: 'BrosvsBros', title: 'League of Legends', matchType: '3v3', entries: '1/6', entryAmount: 5, startDateTime: 'Feb 23rd, 2019 4:00PM Pacific', maxParticipants: 6},
-      { id: '12313123123', name: 'Come at me bro', title: 'League of Legends', matchType: '5v5', entries: '2/10', entryAmount: 15, startDateTime: 'Feb 23rd, 2019 4:00PM Pacific', maxParticipants: 10},
-      { id: '12313123123', name: 'At your moms', title: 'League of Legends', matchType: '3v3', entries: '1/6', entryAmount: 25, startDateTime: 'Feb 23rd, 2019 4:00PM Pacific', maxParticipants: 6},
-      { id: '12313123123', name: 'Match 123', title: 'League of Legends', matchType: '3v3', entries: '3/6', entryAmount: 25, startDateTime: 'Feb 23rd, 2019 4:00PM Pacific', maxParticipants: 6},
-      { id: '12313123123', name: 'Rubber duck escapades', title: 'League of Legends', matchType: '5v5', entries: '2/10', entryAmount: 5, startDateTime: 'Feb 23rd, 2019 4:00PM Pacific', maxParticipants: 10},
-    ];
-
-    this.myMatches = [
-      { id: '12313123123', name: 'BrosvsBros', title: 'League of Legends', matchType: '3v3', entries: '1/6', entryAmount: 5, startDateTime: 'Feb 23rd, 2019 4:00PM Pacific', maxParticipants: 6},
-      { id: '12313123123', name: 'Come at me bro', title: 'League of Legends', matchType: '5v5', entries: '2/10', entryAmount: 15, startDateTime: 'Feb 23rd, 2019 4:00PM Pacific', maxParticipants: 10},
-    ];
   }
 
   toggleJoinModal = () => {
@@ -46,11 +32,8 @@ export default class Home extends Component {
   }
 
 
-  componentDidMount = () => {
-    // Grab the matches from the api
-  }
-
   static async getInitialProps({ query }) {
+    console.log("lo", query.lobbyData);
     return {
       lobbyData: query.lobbyData,
       myGames: query.myGames
@@ -59,6 +42,7 @@ export default class Home extends Component {
   }
 
   getDataRows = () => {
+    /*
     return this.state.lobbyData.map((game) => (
       <tr key={game._id}>
         <td><Link href={`/game/${game._id}`}>{game.name}</Link></td>
@@ -77,7 +61,9 @@ export default class Home extends Component {
         })}</td>
         <td><Button onClick={this.toggleJoinModal}>Join</Button></td>
       </tr>)
-    )
+    )*/
+
+    return [];
   };
 
 
@@ -90,7 +76,7 @@ export default class Home extends Component {
     else {
       return this.state.myGames.map((game) => (
         <tr key={game._id}>
-          <td><Link href={`/game/${game._id}`}>{game.name}</Link></td>
+          <td><Link href={`/game/${game._id}`}>{ game.name || "NA" }</Link></td>
           <td>{game.title}</td>
           <td>{game.matchType}</td>
           <td>{game.entries}</td>

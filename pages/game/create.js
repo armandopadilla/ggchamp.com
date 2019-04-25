@@ -17,7 +17,8 @@ export default class GameCreate extends Component {
     matchName: '',
     title: '',
     gameType: '',
-    startDateTime: '',
+    startDate: '',
+    startTime: '',
     entryFee: '',
     isSubmitted: false,
     isError: null,
@@ -33,13 +34,13 @@ export default class GameCreate extends Component {
   handleOnSubmit = async (e) => {
     e.preventDefault();
 
+    this.setState({ isSubmitted: false });
+
     // Grab the users token
     const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hbmRvcGFkaWxsYTgxQGdtYWlsLmNvbSIsImlkIjoiNWNiNzU0MGZlZmQ1Y2U1NWJhNGZjM2Y4IiwidXNlcm5hbWUiOiJhcm1hbmRvIiwiaWF0IjoxNTU1ODUxODgyfQ.KXuUF82jtpIr1Yf8almnbVjfi1u2tRYDVuakRVLSVVY';
-    //console.log(document.cookie);
 
     // Format the date-time
-    const dateTime = new Date(this.state.startDateTime);
-    console.log(dateTime);
+    const dateTime = new Date(this.state.startDate+' '+this.state.startTime);
     this.setState({ startDateTime: dateTime }, async () => {
 
       // Fetch the data from API
@@ -52,20 +53,27 @@ export default class GameCreate extends Component {
         }
       };
 
-      // To do this should be part of this apps API
+      //@todo this should be part of this apps API
       try {
         const res = await axios(options);
         this.setState({ isSubmitted: true, isSuccess: true });
 
         // Join the contest
 
+
+
+        this.setState({
+          isSubmitted: true,
+          isError: false,
+          isSuccess: true });
+
+
       }
       catch(e) {
-        this.setState({ isSubmitted: true, isError: true, message: e.response.data.message });
+        this.setState({ isSubmitted: true, isError: true, message: e.response.message });
       }
 
     });
-    //const myGames = JSON.parse(resMyData).data;
 
   };
 
@@ -80,7 +88,10 @@ export default class GameCreate extends Component {
         </Alert>)
       }
       else {
-        return (<Alert color="sucess">{this.state.message}</Alert>)
+        return (
+          <Alert color="success">You're set!  Your match has been scheduled.
+          Now, invite friends or wait to have new competitors join your match.
+          </Alert>)
       }
     }
   }
@@ -109,8 +120,12 @@ export default class GameCreate extends Component {
             </Input>
           </FormGroup>
           <FormGroup>
-            <Label for="startTime">Scheduled Start Date Time</Label>
-            <Input type="datetime" name="startDateTime" id="startDateTime" onChange={this.handleInputChange} />
+            <Label for="startDate">Scheduled Start Date</Label>
+            <Input type="date" name="startDate" id="startDate" onChange={this.handleInputChange} />
+          </FormGroup>
+          <FormGroup>
+            <Label for="startTime">Scheduled Start Time</Label>
+            <Input type="time" name="startTime" id="startTime" onChange={this.handleInputChange} />
           </FormGroup>
           <FormGroup>
             <Label for="entryFee">Minimum Entry Fee</Label>
