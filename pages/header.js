@@ -5,7 +5,6 @@ import {
   Nav,
   NavItem,
   NavLink,
-  Badge,
   Modal,
   ModalBody,
   ModalHeader,
@@ -13,10 +12,10 @@ import {
   Button,
   Form,
   FormGroup,
-  Label,
   Input,
+  Alert,
 } from 'reactstrap';
-
+import axios from 'axios';
 
 export default class Header extends React.Component {
 
@@ -25,11 +24,72 @@ export default class Header extends React.Component {
 
     this.state = {
       inviteModal: false,
+      invite1: null,
+      invite2: null,
+      invite3: null
     };
   }
 
   toggleInviteModal = () => {
-    this.setState({ inviteModal: !this.state.inviteModal })
+    this.setState({
+      inviteModal: !this.state.inviteModal ,
+      inviteErrorMessage: null,
+      invite1: null,
+      invite2: null,
+      invite3: null,
+      inviteSubmitted: false,
+    })
+  };
+
+  handleInputChange = (e) => {
+    const { id, value } = e.target;
+
+    this.setState({
+      [id]: value
+    })
+  };
+
+  handleSubmit = (e) => {
+    console.log(this.state);
+    e.preventDefault();
+
+    // Make a call to the BE.
+    // Grab the token
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hbmRvcGFkaWxsYTgxQGdtYWlsLmNvbSIsImlkIjoiNWNiNzU0MGZlZmQ1Y2U1NWJhNGZjM2Y4IiwidXNlcm5hbWUiOiJhcm1hbmRvIiwiaWF0IjoxNTU1OTQ5NTQ1fQ.ZRru8kGP8ORcEjJCA9OKsH62QcPn7ex9xkk_U8ISy5U';
+
+    var options = {
+      baseURL: `http://localhost:3000/v1/`,
+      headers: {
+        'authorization': `Bearer ${token}`
+      }
+    };
+
+    const axiosInstance = axios.create(options);
+    axiosInstance.post(`invite`, this.state)
+      .then((resp) => {
+        const data = resp.data;
+        console.log("success", resp);
+        this.setState({
+          inviteSubmitted: true,
+        });
+      }).catch(e => {
+      console.log("error", e.response.data.message);
+      this.setState({
+        inviteErrorMessage: e.response.data.message,
+        inviteSubmitted: true,
+      })
+    });
+  }
+
+  getInviteAlertMessage = () => {
+    if (this.state.inviteSubmitted) {
+      if (this.state.inviteErrorMessage) {
+        return (<Alert color="danger">Whoops! We couldnt send the invites.  {this.state.inviteErrorMessage}</Alert>)
+      }
+      else {
+        return (<Alert color="success">You're set! We sent out your invites.</Alert>)
+      }
+    }
   }
 
   render = () => {
@@ -77,43 +137,29 @@ export default class Header extends React.Component {
     }
     return (
       <Navbar color="dark" dark expand="md">
-        <NavbarBrand href="/home">gtgchamp.com</NavbarBrand>
+        <NavbarBrand href="/home">ggChamp.com</NavbarBrand>
         { nav }
 
         <Modal isOpen={this.state.inviteModal} toggle={this.toggleInviteModal}>
-          <ModalHeader toggle={this.toggleInviteModal}>Invite Your Players</ModalHeader>
+          <ModalHeader toggle={this.toggleInviteModal}>Invite Friends & Competitors</ModalHeader>
           <ModalBody>
-
-            <Form onSubmit={ this.handleSubmit }>
+            { this.getInviteAlertMessage() }
+            <Form>
               <FormGroup>
-                <Label for="amount">Player Phone/Email</Label>
-                <Input type="amount" name="amount" id="amount" onChange={this.handleInputChange} />
+                <Input type="invite1" placeholder="Mobile Phone Number or Email Address" name="invite1" id="invite1" onChange={this.handleInputChange} />
               </FormGroup>
               <FormGroup>
-                <Label for="amount">Player Phone/Email</Label>
-                <Input type="amount" name="amount" id="amount" onChange={this.handleInputChange} />
+                <Input type="invite2" placeholder="Mobile Phone Number or Email Address" name="invit2" id="invite2" onChange={this.handleInputChange} />
               </FormGroup>
               <FormGroup>
-                <Label for="amount">Player Phone/Email</Label>
-                <Input type="amount" name="amount" id="amount" onChange={this.handleInputChange} />
-              </FormGroup>
-              <FormGroup>
-                <Label for="amount">Player Phone/Email</Label>
-                <Input type="amount" name="amount" id="amount" onChange={this.handleInputChange} />
-              </FormGroup>
-              <FormGroup>
-                <Label for="amount">Player Phone/Email</Label>
-                <Input type="amount" name="amount" id="amount" onChange={this.handleInputChange} />
-              </FormGroup>
-              <FormGroup>
-                <Label for="amount">Player Phone/Email</Label>
-                <Input type="amount" name="amount" id="amount" onChange={this.handleInputChange} />
+                <Input type="invite3" placeholder="Mobile Phone Number or Email Address" name="invite3" id="invite3" onChange={this.handleInputChange} />
               </FormGroup>
             </Form>
 
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.toggleInviteModal}>Invite Players</Button>{' '}
+            <Button color="primary" onClick={ this.handleSubmit }>Invite!</Button>{' '}
+            <Button color="default" onClick={this.toggleInviteModal}>Never mind...:-\</Button>
           </ModalFooter>
         </Modal>
       </Navbar>
