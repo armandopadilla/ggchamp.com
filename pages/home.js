@@ -8,8 +8,10 @@ import {
   ModalBody,
   ModalHeader,
   ModalFooter,
-  Button
+  Button,
+  Alert
 } from 'reactstrap';
+import axios from 'axios';
 
 export default class Home extends Component {
   constructor(props) {
@@ -20,20 +22,35 @@ export default class Home extends Component {
       inviteModal: false,
       lobbyData: props.lobbyData,
       myGames: props.myGames,
+      selectedJoinMatchId: null,
+      joinGameInfo: {},
+      isJoinSubmitted: false,
+      joinErrorMessage: null,
     };
   }
 
-  toggleJoinModal = () => {
-    this.setState({ joinModal: !this.state.joinModal })
-  }
+  toggleJoinModal = (e) => {
+    const {id} = e.target;
+
+    this.setState({
+      joinModal: !this.state.joinModal ,
+      selectedJoinMatchId: id,
+      isJoinSubmitted: false,
+      joinErrorMessage: null,
+    }, () => {
+      if (this.state.joinModal) {
+        this.getGameInfo()
+      }
+    })
+
+  };
 
   toggleInviteModal = () => {
     this.setState({ inviteModal: !this.state.inviteModal })
-  }
+  };
 
 
   static async getInitialProps({ query }) {
-    console.log("lo", query.lobbyData);
     return {
       lobbyData: query.lobbyData,
       myGames: query.myGames
@@ -42,10 +59,9 @@ export default class Home extends Component {
   }
 
   getDataRows = () => {
-    /*
     return this.state.lobbyData.map((game) => (
       <tr key={game._id}>
-        <td><Link href={`/game/${game._id}`}>{game.name}</Link></td>
+        <td><Link href={`/game/${game._id}`}>{game.name || "NA"}</Link></td>
         <td>{game.title}</td>
         <td>{game.matchType}</td>
         <td>{game.participants.length}</td>
@@ -59,9 +75,9 @@ export default class Home extends Component {
           hour: "numeric",
           minute: "numeric"
         })}</td>
-        <td><Button onClick={this.toggleJoinModal}>Join</Button></td>
+        <td><Button id={game._id} onClick={this.toggleJoinModal}>Join</Button></td>
       </tr>)
-    )*/
+    )
 
     return [];
   };
@@ -83,9 +99,84 @@ export default class Home extends Component {
           <td>${game.entryFee.toFixed(2)}</td>
           <td>${(game.entryFee * game.maxParticipants).toFixed(2)}</td>
           <td>{game.startDateTime}</td>
-          <td><Button onClick={this.toggleJoinModal}>Join</Button></td>
+          <td><Button id={game._id} onClick={this.toggleJoinModal}>Join</Button></td>
         </tr>)
       )
+    }
+  };
+
+  getGameInfo = () => {
+    // Grab the token
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hbmRvcGFkaWxsYTgxQGdtYWlsLmNvbSIsImlkIjoiNWNiNzU0MGZlZmQ1Y2U1NWJhNGZjM2Y4IiwidXNlcm5hbWUiOiJhcm1hbmRvIiwiaWF0IjoxNTU1OTQ5NTQ1fQ.ZRru8kGP8ORcEjJCA9OKsH62QcPn7ex9xkk_U8ISy5U';
+
+    var options = {
+      baseURL: `http://localhost:3000/v1/`,
+      headers: {
+        'authorization': `Bearer ${token}`
+      }
+    };
+
+    const axiosInstance = axios.create(options);
+    axiosInstance.get(`game/${this.state.selectedJoinMatchId}`)
+      .then((resp) => {
+        const data = resp.data;
+        const { name,  startDateTime, entryFee, maxParticipants } = data.data;
+        this.setState({ joinGameInfo: { name, startDateTime, entryFee, maxParticipants } });
+      });
+
+  };
+
+
+  /**
+   * Allows the user to join a specific match
+   */
+  joinMatch = () => {
+    const gameInfoToJoin = this.state.joinGameInfo;
+
+    // make the call to join the specific game
+    // Grab the token
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hbmRvcGFkaWxsYTgxQGdtYWlsLmNvbSIsImlkIjoiNWNiNzU0MGZlZmQ1Y2U1NWJhNGZjM2Y4IiwidXNlcm5hbWUiOiJhcm1hbmRvIiwiaWF0IjoxNTU1OTQ5NTQ1fQ.ZRru8kGP8ORcEjJCA9OKsH62QcPn7ex9xkk_U8ISy5U';
+
+    var options = {
+      baseURL: `http://localhost:3000/v1/`,
+      headers: {
+        'authorization': `Bearer ${token}`
+      }
+    };
+
+    const axiosInstance = axios.create(options);
+    axiosInstance.post(`game/${this.state.selectedJoinMatchId}/join`, {
+      contestId: 1,
+    })
+      .then((resp) => {
+        const data = resp.data;
+        console.log("success", resp);
+        this.setState({
+          joinSubmitted: true,
+        });
+        //const { name,  startDateTime, entryFee, maxParticipants } = data.data;
+        //this.setState({ joinGameInfo: { name, startDateTime, entryFee, maxParticipants } });
+      }).catch(e => {
+        console.log("error", e.response.data.message);
+        this.setState({
+          joinErrorMessage: e.response.data.message,
+          isJoinSubmitted: true,
+        })
+    });
+
+    // Get the response
+    // Show an alert.
+  }
+
+
+  getJoinAlertMessage = () => {
+    if (this.state.isJoinSubmitted) {
+      if (this.state.joinErrorMessage) {
+        return (<Alert color="danger">Whoops! You couldnt join the game.  {this.state.joinErrorMessage}</Alert>)
+      }
+      else {
+        return (<Alert color="success">You're set! You have successfully joined this game.</Alert>)
+      }
     }
   };
 
@@ -144,12 +235,21 @@ export default class Home extends Component {
         <Modal isOpen={this.state.joinModal} toggle={this.toggleJoinModal}>
           <ModalHeader toggle={this.toggleJoinModal}>Join Game</ModalHeader>
           <ModalBody>
-            Are you sure you want to join this game?
+            { this.getJoinAlertMessage() }
+            Are you sure you want to join, { this.state.joinGameInfo.name  }?.
 
-            Entry Fee:  $5 (if "yup" your account will be deducted this amount)
+            <div>Entry Fee: ${ this.state.joinGameInfo.entryFee }</div>
+            <div>Max Participants: { this.state.joinGameInfo.maxParticipants }</div>
+            <div>Start Date/Time: { this.state.joinGameInfo.startDateTime }</div>
+
+            <hr />
+            <div style={{ fontSize: "10px" }}>
+              By pressing "yup" your account will be deducted,
+              you agree to the terms of use.
+            </div>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.toggleJoinModal}>Yup</Button>{' '}
+            <Button color="primary" onClick={ this.joinMatch }>Yup</Button>{' '}
             <Button color="secondary" onClick={this.toggleJoinModal}>Nah, Ill pass</Button>
           </ModalFooter>
         </Modal>
