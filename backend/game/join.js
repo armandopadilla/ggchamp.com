@@ -1,3 +1,10 @@
 module.exports = (app, req, res) => {
-  return app.render(req.raw, res.res, '/game/join', req.query, {})
+  // Check if the user has access to this page.
+
+  // Grab the game id
+  const { gameId } = req.params;
+
+  //
+
+  return app.render(req.raw, res.res, '/game/join', { gameId }, {})
 };
