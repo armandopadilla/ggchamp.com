@@ -6,9 +6,14 @@ const formatDate = (date) => {
     day: "numeric",
     hour: "numeric",
     minute: "numeric"
-  })
+  }) + " Pacific"
+};
+
+const formatMatchName = (matchName) => {
+  return (matchName)? matchName : "No Match Name Provided";
 };
 
 module.exports = {
-  formatDate
+  formatDate,
+  formatMatchName
 };

@@ -1,8 +1,7 @@
 const decorator = require('./decorators');
-
-const isLoggedIn = () => {}
+const auth = require('./auth');
 
 module.exports = {
-  isLoggedIn,
+  auth,
   decorator,
 }
