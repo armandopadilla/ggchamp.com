@@ -1,4 +1,9 @@
 const request = require('request-promise');
+const {
+  API_URL,
+  API_APP_ID,
+  API_USER_PROFILE_ENDPOINT
+} = require('../../constants');
 
 module.exports = async (app, req, res) => {
 
@@ -11,7 +16,7 @@ module.exports = async (app, req, res) => {
   // Fetch the data from API
   var options = {
     method: 'GET',
-    url: `http://localhost:3000/v1/user/profile`,
+    url: `${API_URL}`,
     headers: {
       'authorization': `Bearer ${token}`
     }
@@ -20,5 +25,5 @@ module.exports = async (app, req, res) => {
   const resUserInfo = await request(options);
   const userInfo = JSON.parse(resUserInfo).data;
 
-  return app.render(req.raw, res.res, '/user/profile', { userInfo }, {})
+  return app.render(req.raw, res.res, `${API_USER_PROFILE_ENDPOINT}?appId=${API_APP_ID}`, { userInfo }, {})
 };

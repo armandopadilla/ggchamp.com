@@ -1,5 +1,9 @@
 // ./pages/_document.js
-import Document, { Head, Main, NextScript } from 'next/document'
+import Document, {
+  Head,
+  Main,
+  NextScript
+} from 'next/document'
 
 export default class MyDocument extends Document {
 
@@ -7,7 +11,7 @@ export default class MyDocument extends Document {
     return (
       <html>
       <Head>
-        <link href="https://fonts.googleapis.com/css?family=Carter+One" rel="stylesheet" />
+        <title>ggChamp.com</title>
       </Head>
       <body className="custom_class">
       <Main />

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  Row,
   Col,
   Form,
   FormGroup,
@@ -10,6 +9,11 @@ import {
   Alert
 } from 'reactstrap'
 import axios from 'axios'
+import {
+  API_APP_ID,
+  API_URL,
+  API_CREATE_GAME_ENDPOINT,
+} from '../../constants';
 
 export default class GameCreate extends Component {
 
@@ -46,7 +50,7 @@ export default class GameCreate extends Component {
       // Fetch the data from API
       var options = {
         method: 'POST',
-        url: 'http://localhost:3000/v1/game',
+        url: `${API_URL}${API_CREATE_GAME_ENDPOINT}?appId=${API_APP_ID}`,
         data: this.state,
         headers: {
           'authorization': `Bearer ${token}`

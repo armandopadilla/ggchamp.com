@@ -1,16 +1,23 @@
+const request = require('request-promise');
+const cookies = require('isomorphic-cookie');
+const {
+  API_URL,
+  API_APP_ID,
+  API_LOGOUT_ENDPOINT,
+}  = require('../constants');
+
 module.exports = async (app, req, res) => {
 
   // Check if the user is logged in
   //await isLoggedIn();
 
-  // Make the call to the API
   // Check if the user is logged in
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hbmRvcGFkaWxsYTgxQGdtYWlsLmNvbSIsImlkIjoiNWNiNzU0MGZlZmQ1Y2U1NWJhNGZjM2Y4IiwidXNlcm5hbWUiOiJhcm1hbmRvIiwiaWF0IjoxNTU1NjMzMzMyfQ.p-MYe5hNGHxRX3_63szy6o6wq50VKoZDN6yQPNDuWfI';
+  const token = cookies.load("token", req);
 
-  // Fetch the data from API
+  // Log the user out by making the API call.
   const options = {
-    method: 'GET',
-    url: 'http://localhost:3000/v1/auth/logout',
+    method: 'POST',
+    url: `${API_URL}${API_LOGOUT_ENDPOINT}?appId=${API_APP_ID}`,
     headers: {
       'authorization': `Bearer ${token}`
     }
@@ -18,6 +25,9 @@ module.exports = async (app, req, res) => {
 
   // Fetch my matches
   await request(options);
+
+  // Remove the cookie
+  // @TODO
 
   return app.render(req.raw, res.res, '/logout', {}, {})
 };

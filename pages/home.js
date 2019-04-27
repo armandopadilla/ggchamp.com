@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Link from 'next/link';
 import {
   Row,
   Col,
@@ -12,6 +11,14 @@ import {
   Alert
 } from 'reactstrap';
 import axios from 'axios';
+import cookieManager from 'isomorphic-cookie';
+import {
+  API_APP_ID,
+  API_URL,
+  API_GAME_ENDPOINT,
+} from '../constants'
+import { decorator } from '../utils';
+
 
 export default class Home extends Component {
   constructor(props) {
@@ -61,21 +68,16 @@ export default class Home extends Component {
   getDataRows = () => {
     return this.state.lobbyData.map((game) => (
       <tr key={game._id}>
-        <td><Link href={`/game/${game._id}`}>{game.name || "NA"}</Link></td>
+        <td><a href={`/game/${game._id}`}>{game.name || "NA"}</a></td>
         <td>{game.title}</td>
         <td>{game.matchType}</td>
         <td>{game.participants.length}</td>
         <td>${game.entryFee.toFixed(2)}</td>
         <td>${(game.entryFee * game.maxParticipants).toFixed(2)}</td>
-        <td>{new Date(game.startDateTime).toLocaleDateString('en-US', {
-          weekday: "short",
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-          hour: "numeric",
-          minute: "numeric"
-        })}</td>
-        <td><Button id={game._id} onClick={this.toggleJoinModal}>Join</Button></td>
+        <td>{ decorator.formatDate(game.startDateTime) }</td>
+        <td>
+          <Button id={game._id} onClick={this.toggleJoinModal}>Join</Button>
+        </td>
       </tr>)
     )
 
@@ -84,40 +86,33 @@ export default class Home extends Component {
 
 
   getMyMatchesDataRows = () => {
-    if (!this.state.myGames.length) {
-      return (
-        <tr><td>You havent joined any games</td></tr>
+    return this.state.myGames.map((game) => (
+      <tr key={game._id}>
+        <td><a href={`/game/${game._id}`}>{ game.name || "NA" }</a></td>
+        <td>{game.title}</td>
+        <td>{game.matchType}</td>
+        <td>{game.entries}</td>
+        <td>${game.entryFee.toFixed(2)}</td>
+        <td>${(game.entryFee * game.maxParticipants).toFixed(2)}</td>
+        <td>{ decorator.formatDate(game.startDateTime) }</td>
+        <td><Button id={game._id} onClick={this.toggleJoinModal}>Join</Button></td>
+      </tr>)
       )
-    }
-    else {
-      return this.state.myGames.map((game) => (
-        <tr key={game._id}>
-          <td><Link href={`/game/${game._id}`}>{ game.name || "NA" }</Link></td>
-          <td>{game.title}</td>
-          <td>{game.matchType}</td>
-          <td>{game.entries}</td>
-          <td>${game.entryFee.toFixed(2)}</td>
-          <td>${(game.entryFee * game.maxParticipants).toFixed(2)}</td>
-          <td>{game.startDateTime}</td>
-          <td><Button id={game._id} onClick={this.toggleJoinModal}>Join</Button></td>
-        </tr>)
-      )
-    }
   };
 
   getGameInfo = () => {
     // Grab the token
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hbmRvcGFkaWxsYTgxQGdtYWlsLmNvbSIsImlkIjoiNWNiNzU0MGZlZmQ1Y2U1NWJhNGZjM2Y4IiwidXNlcm5hbWUiOiJhcm1hbmRvIiwiaWF0IjoxNTU1OTQ5NTQ1fQ.ZRru8kGP8ORcEjJCA9OKsH62QcPn7ex9xkk_U8ISy5U';
+    const token = cookieManager.load("token");
 
     var options = {
-      baseURL: `http://localhost:3000/v1/`,
+      baseURL: `${API_URL}`,
       headers: {
         'authorization': `Bearer ${token}`
       }
     };
 
     const axiosInstance = axios.create(options);
-    axiosInstance.get(`game/${this.state.selectedJoinMatchId}`)
+    axiosInstance.get(`${API_GAME_ENDPOINT}/${this.state.selectedJoinMatchId}?appId=${API_APP_ID}`)
       .then((resp) => {
         const data = resp.data;
         const { name,  startDateTime, entryFee, maxParticipants } = data.data;
@@ -135,22 +130,21 @@ export default class Home extends Component {
 
     // make the call to join the specific game
     // Grab the token
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hbmRvcGFkaWxsYTgxQGdtYWlsLmNvbSIsImlkIjoiNWNiNzU0MGZlZmQ1Y2U1NWJhNGZjM2Y4IiwidXNlcm5hbWUiOiJhcm1hbmRvIiwiaWF0IjoxNTU1OTQ5NTQ1fQ.ZRru8kGP8ORcEjJCA9OKsH62QcPn7ex9xkk_U8ISy5U';
+    const token = cookieManager.load("token");
 
     var options = {
-      baseURL: `http://localhost:3000/v1/`,
+      baseURL: `${API_URL}`,
       headers: {
         'authorization': `Bearer ${token}`
       }
     };
 
     const axiosInstance = axios.create(options);
-    axiosInstance.post(`game/${this.state.selectedJoinMatchId}/join`, {
+    axiosInstance.post(`game/${this.state.selectedJoinMatchId}/join?appId=${API_APP_ID}`, {
       contestId: 1,
     })
       .then((resp) => {
         const data = resp.data;
-        console.log("success", resp);
         this.setState({
           joinSubmitted: true,
         });
@@ -180,40 +174,39 @@ export default class Home extends Component {
     }
   };
 
-  render () {
-    return (
-      <Col md={10} style={{ padding: "15px", margin: "auto" }}>
-        <h2>Match Lobby</h2>
 
-        <Row>
-          <Col>
-            <h4>My Matches</h4>
+  getPublicGamesTable = () => {
+    if (this.state.lobbyData.length) {
+      return (
         <Table striped>
           <thead>
-          <tr>
-            <th>Match Name</th>
-            <th>Game Title</th>
-            <th>Match Type</th>
-            <th>Entries</th>
-            <th>Entry Amount</th>
-            <th>Pot</th>
-            <th>Start Date Time</th>
-            <th>Options</th>
-          </tr>
-          </thead>
-          <tbody>
-          { this.getMyMatchesDataRows() }
-          </tbody>
+        <tr>
+          <th>Match Name</th>
+          <th>Game Title</th>
+          <th>Match Type</th>
+          <th>Entries</th>
+          <th>Entry Amount</th>
+          <th>Pot</th>
+          <th>Start Date Time</th>
+          <th>Options</th>
+        </tr>
+        </thead>
+        <tbody>{ this.getDataRows() }</tbody>
         </Table>
-          </Col>
-        </Row>
+      )
+    } else {
+      return (
+        <Table striped>
+          <tbody><tr><td>There are no public games at the moment</td></tr></tbody>
+        </Table>)
+    }
+  }
 
-
-        <Row>
-        <Col>
-          <h4>Public Matches</h4>
-          <Table striped>
-            <thead>
+  getMyMatchTable = () => {
+    if (this.state.myGames.length) {
+      return (
+        <Table striped>
+          <thead>
             <tr>
               <th>Match Name</th>
               <th>Game Title</th>
@@ -224,11 +217,37 @@ export default class Home extends Component {
               <th>Start Date Time</th>
               <th>Options</th>
             </tr>
-            </thead>
-            <tbody>
-              { this.getDataRows() }
-            </tbody>
-          </Table>
+          </thead>
+        <tbody>{ this.getMyMatchesDataRows() }</tbody>
+        </Table>
+      )
+    } else {
+      return (
+        <Table striped>
+          <tbody><tr><td>You havent joined any games</td></tr></tbody>
+        </Table>)
+    }
+
+  }
+
+
+  render () {
+    return (
+      <Col md={10} style={{ padding: "15px", margin: "auto" }}>
+        <h2>Match Lobby</h2>
+
+        <Row>
+          <Col>
+            <h4>My Matches</h4>
+            { this.getMyMatchTable() }
+          </Col>
+        </Row>
+
+
+        <Row>
+        <Col>
+          <h4>Public Matches</h4>
+          { this.getPublicGamesTable() }
         </Col>
         </Row>
 

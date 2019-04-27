@@ -9,7 +9,11 @@ import {
   Alert,
 } from 'reactstrap';
 import axios from 'axios';
-import Link from 'next/link';
+import {
+  API_APP_ID,
+  API_URL,
+  API_SIGNUP_ENDPOINT,
+} from '../constants';
 
 export default class Index extends Component {
 
@@ -44,7 +48,7 @@ export default class Index extends Component {
 
       this.setState({ dob, acceptedTerms: 'yes' }, async () => {
         try {
-          const results = await axios.post('http://localhost:3000/v1/user', this.state);
+          const results = await axios.post(`${API_URL}${API_SIGNUP_ENDPOINT}?appId=${API_APP_ID}`, this.state);
           this.setState({ isValid: true, submitted: true });
         } catch (e) {
           this.setState({ isValid: false, message: e.response.data.message, submitted: true })
@@ -62,7 +66,7 @@ export default class Index extends Component {
       message = (
         <Alert color="success">
           <strong>Success!</strong> Welcome to ggchamp.com<br />
-          Verify your email/phone number but you can still log in using the below <Link href="login">link</Link>.
+          Verify your email/phone number but you can still log in using the below <a href="login">link</a>.
         </Alert>);
 
       if (!this.state.isValid) {
@@ -78,7 +82,7 @@ export default class Index extends Component {
     }
 
     return (
-    <Col className="pageContainer" md={5} style={{ padding: "15px", margin: "auto" }}>
+    <Col className="pageContainer" md={4} style={{ padding: "15px", margin: "auto" }}>
       <h3 className="pageHeader">Sign Up</h3>
       { message }
       <Form onSubmit={ this.handleSubmit }>
@@ -96,11 +100,11 @@ export default class Index extends Component {
         </FormGroup>
         <FormGroup>
           <Label for="email">Email</Label>
-          <Input type="email" name="email" id="email" onChange={ this.handleInputChange } />
+          <Input type="email" name="email" id="email" placeholder="example@example.com" onChange={ this.handleInputChange } />
         </FormGroup>
         <FormGroup>
           <Label for="phone">Phone Number</Label>
-          <Input type="phone" name="phome" id="phone" onChange={ this.handleInputChange } />
+          <Input type="phone" name="phone" id="phone" placeholder="1 555-6780" onChange={ this.handleInputChange } />
         </FormGroup>
         <FormGroup>
           <Label for="dob">Date of Birth</Label>
@@ -108,8 +112,11 @@ export default class Index extends Component {
         </FormGroup>
         <FormGroup>
           <hr />
-          <h5>By clicking "Sign Up" you agree to the Terms of Use.</h5>
-          <Button type="primary">Sign Up</Button>
+          <div style={{ fontSize: "12px", textAlign: "center" }}>
+            By clicking "Sign Up" you agree to the Terms of Use.
+          </div>
+          <hr />
+          <Button type="primary" block>Sign Up</Button>
         </FormGroup>
       </Form>
     </Col>
