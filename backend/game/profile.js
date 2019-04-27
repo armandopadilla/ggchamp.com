@@ -6,6 +6,11 @@
  * @param res
  */
 const request = require('request-promise');
+const {
+  API_URL,
+  API_APP_ID,
+  API_GAME_ENDPOINT,
+} = require('../../constants');
 
 module.exports = async (app, req, res) => {
 
@@ -22,7 +27,7 @@ module.exports = async (app, req, res) => {
   // Fetch the data from API
   var options = {
     method: 'GET',
-    url: `http://localhost:3000/v1/game/${gameId}?playerInfo=1`,
+    url: `${API_URL}${API_GAME_ENDPOINT}/${gameId}?appId=${API_APP_ID}&playerInfo=1`,
     headers: {
       'authorization': `Bearer ${token}`
     }
@@ -30,7 +35,6 @@ module.exports = async (app, req, res) => {
 
   const resGame = await request(options);
   const game = JSON.parse(resGame).data;
-  console.log("game", game);
 
   return app.render(req.raw, res.res, '/game/profile', { game }, {})
 };

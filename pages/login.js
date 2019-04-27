@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  Row,
   Col,
   Form,
   FormGroup,
@@ -10,7 +9,12 @@ import {
   Alert
 } from 'reactstrap'
 import axios from 'axios';
-import Link from 'next/link';
+import {
+  API_APP_ID,
+  API_LOGIN_ENDPOINT,
+  API_URL,
+} from '../constants'
+import cookies from 'isomorphic-cookie';
 
 export default class Login extends Component {
 
@@ -31,16 +35,13 @@ export default class Login extends Component {
     e.preventDefault();
 
     try {
-      const results = await axios.post('http://localhost:3000/v1/auth/login', this.state);
-
+      const results = await axios.post(`${API_URL}${API_LOGIN_ENDPOINT}?appId=${API_APP_ID}`, this.state);
       const token = results.data.data.token;
-
-      // We need an AppKey to know its coming from THIS app.
 
       document.cookie = `token=${token}`;
       window.location = '/home';
-
     } catch (e) {
+      console.log(e);
       this.setState({ isInvalidLogin: true });
     }
   };
@@ -70,7 +71,7 @@ export default class Login extends Component {
           <div>
             <hr />
             <div style={{ textAlign: 'center' }}>or</div>
-            <div style={{ textAlign: 'center' }} ><Link href="signup">Create An Account</Link></div>
+            <div style={{ textAlign: 'center' }} ><a href="/signup">Create An Account</a></div>
           </div>
       </Col>
     )

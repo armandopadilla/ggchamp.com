@@ -16,6 +16,7 @@ import {
   Alert,
 } from 'reactstrap';
 import axios from 'axios';
+import cookieManager from 'isomorphic-cookie';
 
 export default class Header extends React.Component {
 
@@ -55,7 +56,7 @@ export default class Header extends React.Component {
 
     // Make a call to the BE.
     // Grab the token
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hbmRvcGFkaWxsYTgxQGdtYWlsLmNvbSIsImlkIjoiNWNiNzU0MGZlZmQ1Y2U1NWJhNGZjM2Y4IiwidXNlcm5hbWUiOiJhcm1hbmRvIiwiaWF0IjoxNTU1OTQ5NTQ1fQ.ZRru8kGP8ORcEjJCA9OKsH62QcPn7ex9xkk_U8ISy5U';
+    const token = cookieManager.load("token");
 
     var options = {
       baseURL: `http://localhost:3000/v1/`,
@@ -90,6 +91,12 @@ export default class Header extends React.Component {
         return (<Alert color="success">You're set! We sent out your invites.</Alert>)
       }
     }
+  };
+
+  isLoggedIn = () => {
+    // Grab the token
+    const token = cookieManager.load("token");
+    return (token);
   }
 
   render = () => {
@@ -106,8 +113,7 @@ export default class Header extends React.Component {
       </Nav>
     );
 
-    const isLoggedIn = true;
-    if (isLoggedIn) {
+    if (this.isLoggedIn()) {
       nav = (
         <Nav className="ml-auto" navbar>
           <NavItem>
