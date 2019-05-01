@@ -17,18 +17,46 @@ import {
 } from 'reactstrap';
 import axios from 'axios';
 import cookieManager from 'isomorphic-cookie';
+import { decorator } from '../utils'
 
 export default class Header extends React.Component {
 
+
+
   constructor (props) {
-    super(props)
+    super(props);
 
     this.state = {
       inviteModal: false,
       invite1: null,
       invite2: null,
-      invite3: null
+      invite3: null,
+      walletBalance: 0,
     };
+  }
+
+  componentDidMount () {
+    console.log("...i was called in the server...");
+    const token = cookieManager.load("token");
+
+    var options = {
+      baseURL: `http://localhost:3000/v1/`,
+      headers: {
+        'authorization': `Bearer ${token}`
+      }
+    };
+
+    const axiosInstance = axios.create(options);
+    axiosInstance.get(`wallet/my-wallet`)
+      .then((resp) => {
+        const { data } = resp.data;
+        this.setState({
+          walletBalance: decorator.formatMoney(data.balance)
+        })
+      }).catch(e => {
+        console.log("error", e.response.data.message);
+    });
+
   }
 
   toggleInviteModal = () => {
@@ -51,7 +79,6 @@ export default class Header extends React.Component {
   };
 
   handleSubmit = (e) => {
-    console.log(this.state);
     e.preventDefault();
 
     // Make a call to the BE.
@@ -117,7 +144,7 @@ export default class Header extends React.Component {
       nav = (
         <Nav className="ml-auto" navbar>
           <NavItem>
-            <NavLink href="/user/profile">Earnings To Date: $2,345.00</NavLink>
+            <NavLink href="/user/profile">Earnings To Date: ${this.state.walletBalance}</NavLink>
           </NavItem>
           <NavItem>
             <NavLink href="/home">Match Lobby</NavLink>
