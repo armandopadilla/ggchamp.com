@@ -9,6 +9,12 @@ const formatDate = (date) => {
   })
 };
 
+
+const formatMoney = (amount) => {
+  return amount.toFixed(2);
+}
+
 module.exports = {
-  formatDate
+  formatDate,
+  formatMoney,
 };
