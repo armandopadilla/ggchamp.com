@@ -38,7 +38,6 @@ export default class Home extends Component {
     return axiosInstance.get(`wallet/my-wallet`)
       .then((resp) => {
         const { data } = resp.data;
-        console.log(data);
 
         const { wallet, transactions } = data;
         return {
@@ -67,10 +66,11 @@ export default class Home extends Component {
     }
     else {
       const data = this.props.transactions.map((trx) => {
-        return (<tr>
-          <td>Deposit (Bank)</td>
-          <td>$25.00</td>
-          <td>Oct 3, 2019</td>
+        console.log(trx);
+        return (<tr key={trx._id}>
+          <td>{ trx.type } ({ trx.description })</td>
+          <td>${ trx.amount }</td>
+          <td>{ new Date(trx.createdDate).toLocaleString() }</td>
         </tr>);
       })
 
