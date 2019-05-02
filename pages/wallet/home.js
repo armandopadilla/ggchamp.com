@@ -11,6 +11,9 @@ import {
   Button,
   Table
 } from 'reactstrap';
+import axios from 'axios';
+import cookieManager from 'isomorphic-cookie';
+import { decorator } from '../../utils';
 
 const stylez = {
   h3: {
@@ -21,11 +24,72 @@ const stylez = {
 
 export default class Home extends Component {
 
-  constructor (props) {
-    super(props);
+  static getInitialProps ({ req }) {
+
+    const token = cookieManager.load("token", req);
+    var options = {
+      baseURL: `http://localhost:3000/v1/`,
+      headers: {
+        'authorization': `Bearer ${token}`
+      }
+    };
+
+    const axiosInstance = axios.create(options);
+    return axiosInstance.get(`wallet/my-wallet`)
+      .then((resp) => {
+        const { data } = resp.data;
+
+        const { wallet, transactions } = data;
+        return {
+          walletBalance: decorator.formatMoney(wallet.balance),
+          transactions: transactions
+        };
+      }).catch(e => {
+      console.log("error", e);
+      return {
+        walletBalance: decorator.formatMoney(0),
+        transactions: []
+      };
+    });
+
   }
 
-  render () {
+  getTableData = () => {
+    if (!this.props.transactions.length) {
+      return (
+        <Table>
+          <tbody>
+          <tr><td>There are no wallet transactions.</td></tr>
+          </tbody>
+        </Table>
+      )
+    }
+    else {
+      const data = this.props.transactions.map((trx) => {
+        console.log(trx);
+        return (<tr key={trx._id}>
+          <td>{ trx.type } ({ trx.description })</td>
+          <td>${ trx.amount }</td>
+          <td>{ new Date(trx.createdDate).toLocaleString() }</td>
+        </tr>);
+      })
+
+      return (<Table striped>
+        <thead>
+        <tr>
+          <th>Type</th>
+          <th>Amount</th>
+          <th>Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        { data }
+        </tbody>
+      </Table>)
+    }
+  };
+
+    render () {
     return (
       <Col md={10} style={{ padding: "15px", margin: "auto" }}>
         <Row>
@@ -33,7 +97,7 @@ export default class Home extends Component {
             <Card>
               <CardBody>
                 <CardTitle><h3 style={{ textAlign: "center" }}>Wallet Ballance</h3></CardTitle>
-                <CardText style={{ textAlign: "center" }}>$304.45</CardText>
+                <CardText style={{ textAlign: "center" }}>${this.props.walletBalance}</CardText>
               </CardBody>
             </Card>
           </Col>
@@ -47,47 +111,8 @@ export default class Home extends Component {
             </Row>
             <Row>
               <Col>
-                <Table striped>
-                  <thead>
-                  <tr>
-                    <th>Type</th>
-                    <th>Amount</th>
-                    <th>Date</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Deposit (Bank)</td>
-                      <td>$25.00</td>
-                      <td>Oct 3, 2019</td>
-                    </tr>
-                    <tr>
-                      <td>Deposit (Match Won)</td>
-                      <td>$10.00</td>
-                      <td>Oct 4, 2019</td>
-                    </tr>
-                    <tr>
-                      <td>Withdraw (Bank)</td>
-                      <td>$20.00</td>
-                      <td>Oct 4, 2018</td>
-                    </tr>
-                    <tr>
-                      <td>Deposit (Bank)</td>
-                      <td>$25.00</td>
-                      <td>Oct 5, 2018</td>
-                    </tr>
-                    <tr>
-                      <td>Deposit (Match Won)</td>
-                      <td>$25.00</td>
-                      <td>Oct 6, 2018</td>
-                    </tr>
-                    <tr>
-                      <td>Withdraw (Entry Fee)</td>
-                      <td>$5.00</td>
-                      <td>Oct 6, 2018</td>
-                    </tr>
-                  </tbody>
-                </Table>
+                <h2>Transactions</h2>
+                { this.getTableData() }
               </Col>
             </Row>
           </Col>
