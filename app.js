@@ -28,7 +28,6 @@ fastify
     fastify.next('/wallet/deposit', require('./backend/wallet/deposit'));
     fastify.next('/wallet/deposit-thankyou', require('./backend/wallet/deposit-thankyou'));
     fastify.next('/wallet/withdraw', require('./backend/wallet/withdraw'));
-    fastify.next('/wallet/withdraw-thankyou', require('./backend/wallet/withdraw-thankyou'));
     fastify.next('/wallet', require('./backend/wallet'));
 
   });

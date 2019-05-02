@@ -13,7 +13,13 @@ const formatMatchName = (matchName) => {
   return (matchName)? matchName : "No Match Name Provided";
 };
 
+
+const formatMoney = (amount) => {
+  return amount.toFixed(2);
+}
+
 module.exports = {
   formatDate,
-  formatMatchName
+  formatMatchName,
+  formatMoney
 };
