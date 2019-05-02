@@ -17,24 +17,35 @@ import {
   API_URL,
   API_GAME_ENDPOINT,
 } from '../constants'
-import { decorator } from '../utils';
+import { decorator, auth } from '../utils';
+import redirect from 'next-redirect';
 
 
 export default class Home extends Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      joinModal: false,
-      inviteModal: false,
-      lobbyData: props.lobbyData,
-      myGames: props.myGames,
-      selectedJoinMatchId: null,
-      joinGameInfo: {},
-      isJoinSubmitted: false,
-      joinErrorMessage: null,
-    };
-  }
+  state = {
+    joinModal: false,
+    inviteModal: false,
+    lobbyData: this.props.lobbyData,
+    myGames: this.props.myGames,
+    selectedJoinMatchId: null,
+    joinGameInfo: {},
+    isJoinSubmitted: false,
+    joinErrorMessage: null,
+  };
+
+  static async getInitialProps (ctx) {
+    // Check if the user is logged in.
+    if (!auth.isLoggedIn()) {
+      console.log("not logged in")
+      return redirect(ctx, '/')
+    }
+
+    return {
+      lobbyData: query.lobbyData,
+      myGames: query.myGames
+    }
+  };
 
   toggleJoinModal = (e) => {
     const {id} = e.target;
@@ -49,7 +60,6 @@ export default class Home extends Component {
         this.getGameInfo()
       }
     })
-
   };
 
   toggleInviteModal = () => {
@@ -57,54 +67,29 @@ export default class Home extends Component {
   };
 
 
-  static async getInitialProps({ query }) {
-    return {
-      lobbyData: query.lobbyData,
-      myGames: query.myGames
+  getMatchTableRows = (records, showJoinButton) => records.map((game) => {
 
-    }
-  }
+      let joinButton = (showJoinButton) ? (<Button id={game._id} onClick={this.toggleJoinModal}>Join</Button>) : null;
 
-  getDataRows = () => {
-    return this.state.lobbyData.map((game) => (
-      <tr key={game._id}>
-        <td><a href={`/game/${game._id}`}>{game.name || "NA"}</a></td>
+      return (<tr key={game._id}>
+        <td><a href={`/game/${game._id}`}>{ decorator.formatMatchName(game.name) }</a></td>
         <td>{game.title}</td>
         <td>{game.matchType}</td>
         <td>{game.participants.length}</td>
         <td>${game.entryFee.toFixed(2)}</td>
         <td>${(game.entryFee * game.maxParticipants).toFixed(2)}</td>
         <td>{ decorator.formatDate(game.startDateTime) }</td>
-        <td>
-          <Button id={game._id} onClick={this.toggleJoinModal}>Join</Button>
-        </td>
-      </tr>)
-    )
+        <td>{ joinButton }</td>
+      </tr>);
 
-    return [];
-  };
+  }) || [];
 
-
-  getMyMatchesDataRows = () => {
-    return this.state.myGames.map((game) => (
-      <tr key={game._id}>
-        <td><a href={`/game/${game._id}`}>{ game.name || "NA" }</a></td>
-        <td>{game.title}</td>
-        <td>{game.matchType}</td>
-        <td>{game.entries}</td>
-        <td>${game.entryFee.toFixed(2)}</td>
-        <td>${(game.entryFee * game.maxParticipants).toFixed(2)}</td>
-        <td>{ decorator.formatDate(game.startDateTime) }</td>
-        <td><Button id={game._id} onClick={this.toggleJoinModal}>Join</Button></td>
-      </tr>)
-      )
-  };
 
   getGameInfo = () => {
     // Grab the token
     const token = cookieManager.load("token");
 
-    var options = {
+    let options = {
       baseURL: `${API_URL}`,
       headers: {
         'authorization': `Bearer ${token}`
@@ -132,7 +117,7 @@ export default class Home extends Component {
     // Grab the token
     const token = cookieManager.load("token");
 
-    var options = {
+    let options = {
       baseURL: `${API_URL}`,
       headers: {
         'authorization': `Bearer ${token}`
@@ -157,16 +142,13 @@ export default class Home extends Component {
           isJoinSubmitted: true,
         })
     });
-
-    // Get the response
-    // Show an alert.
-  }
+  };
 
 
   getJoinAlertMessage = () => {
     if (this.state.isJoinSubmitted) {
       if (this.state.joinErrorMessage) {
-        return (<Alert color="danger">Whoops! You couldnt join the game.  {this.state.joinErrorMessage}</Alert>)
+        return (<Alert color="danger">Whoops! You couldn't join the game.  {this.state.joinErrorMessage}</Alert>)
       }
       else {
         return (<Alert color="success">You're set! You have successfully joined this game.</Alert>)
@@ -191,7 +173,7 @@ export default class Home extends Component {
           <th>Options</th>
         </tr>
         </thead>
-        <tbody>{ this.getDataRows() }</tbody>
+        <tbody>{ this.getMatchTableRows(this.state.lobbyData, true) }</tbody>
         </Table>
       )
     } else {
@@ -200,7 +182,7 @@ export default class Home extends Component {
           <tbody><tr><td>There are no public games at the moment</td></tr></tbody>
         </Table>)
     }
-  }
+  };
 
   getMyMatchTable = () => {
     if (this.state.myGames.length) {
@@ -215,10 +197,9 @@ export default class Home extends Component {
               <th>Entry Amount</th>
               <th>Pot</th>
               <th>Start Date Time</th>
-              <th>Options</th>
             </tr>
           </thead>
-        <tbody>{ this.getMyMatchesDataRows() }</tbody>
+        <tbody>{ this.getMatchTableRows(this.state.myGames, false) }</tbody>
         </Table>
       )
     } else {
@@ -228,10 +209,10 @@ export default class Home extends Component {
         </Table>)
     }
 
-  }
+  };
 
 
-  render () {
+  render = () => {
     return (
       <Col md={10} style={{ padding: "15px", margin: "auto" }}>
         <h2>Match Lobby</h2>
@@ -276,6 +257,6 @@ export default class Home extends Component {
 
       </Col>
     );
-  }
+  };
 
 }
