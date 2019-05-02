@@ -36,7 +36,6 @@ export default class Header extends React.Component {
   }
 
   componentDidMount () {
-    console.log("...i was called in the server...");
     const token = cookieManager.load("token");
 
     var options = {
@@ -50,11 +49,12 @@ export default class Header extends React.Component {
     axiosInstance.get(`wallet/my-wallet`)
       .then((resp) => {
         const { data } = resp.data;
+        const { wallet } = data;
         this.setState({
           walletBalance: decorator.formatMoney(data.balance)
         })
       }).catch(e => {
-        console.log("error", e.response.data.message);
+        console.log("error", e);
     });
 
   }
