@@ -8,9 +8,13 @@ import {
   CardTitle,
   CardSubtitle,
   CardText,
-  Button,
   Table
 } from 'reactstrap';
+
+import {
+  API_GAME_ENDPOINT,
+  API_APP_ID,
+} from '../../constants'
 
 const stylez = {
   h3: {
@@ -18,14 +22,37 @@ const stylez = {
   }
 }
 
-
+import cookies from 'isomorphic-cookie';
+import axios from 'axios';
 
 export default class Profile extends Component {
 
-  static async getInitialProps ({ query }) {
-    return {
-      game: query.game
-    }
+  static async getInitialProps ({ req, query }) {
+
+    // Check if the user is logged in or not
+    // Get the user info.
+    const token = cookies.load("token", req);
+    const { gameId } = query;
+
+    const options = {
+      baseURL: `http://localhost:3000/v1/`,
+      headers: {
+        'authorization': `Bearer ${token}`
+      }
+    };
+
+    const axiosInstance = axios.create(options);
+    return axiosInstance.get(`${API_GAME_ENDPOINT}/${gameId}?appId=${API_APP_ID}&playerInfo=1`)
+      .then((resp) => {
+        const { data: game } = resp.data;
+        //console.log("game", game);
+        //console.log("data", resp.data);
+        return {
+          game
+        }
+      }).catch(e => {
+        //console.log("error", e);
+      });
   };
 
   render () {
@@ -58,6 +85,7 @@ export default class Profile extends Component {
           <Col md={9}>
             <Row>
               <Col>
+                <h3>Players</h3>
                 <Table striped>
                   <thead>
                   <tr>

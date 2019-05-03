@@ -72,12 +72,14 @@ export default class Home extends Component {
       let joinButton = (showJoinButton) ? (<Button id={game._id} onClick={this.toggleJoinModal}>Join</Button>) : null;
 
       return (<tr key={game._id}>
-        <td><a href={`/game/${game._id}`}>{ decorator.formatMatchName(game.name) }</a></td>
-        <td>{game.title}</td>
-        <td>{game.matchType}</td>
-        <td>{game.participants.length}</td>
-        <td>${game.entryFee.toFixed(2)}</td>
-        <td>${(game.entryFee * game.maxParticipants).toFixed(2)}</td>
+        <td>
+          <a href={`/game/${game._id}`}>{ decorator.formatMatchName(game.name) }</a>
+        </td>
+        <td>{ decorator.formatGameTitle(game.title) }</td>
+        <td>{ decorator.formatMatchType(game.matchType) }</td>
+        <td>{ decorator.formatParticipants(game.participants.length) }</td>
+        <td>{ decorator.formatMatchEntryFee(game.entryFee) }</td>
+        <td>{ decorator.formatPot(game.entryFee, game.maxParticipants) }</td>
         <td>{ decorator.formatDate(game.startDateTime) }</td>
         <td>{ joinButton }</td>
       </tr>);
@@ -205,7 +207,7 @@ export default class Home extends Component {
     } else {
       return (
         <Table striped>
-          <tbody><tr><td>You havent joined any games</td></tr></tbody>
+          <tbody><tr><td>You haven't joined any games</td></tr></tbody>
         </Table>)
     }
 
