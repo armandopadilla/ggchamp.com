@@ -25,9 +25,12 @@ export default class Logout extends Component {
 
     const axiosInstance = axios.create(options);
     return axiosInstance.post(`auth/logout`, {})
-      .then((resp) => {})
+      .then((resp) => {
+        return {}
+      })
       .catch(e => {
         console.log("error", e);
+        return {}
       });
   }
 

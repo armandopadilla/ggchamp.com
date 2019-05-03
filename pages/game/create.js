@@ -14,6 +14,7 @@ import {
   API_URL,
   API_CREATE_GAME_ENDPOINT,
 } from '../../constants';
+import cookies from 'isomorphic-cookie';
 
 export default class GameCreate extends Component {
 
@@ -41,7 +42,7 @@ export default class GameCreate extends Component {
     this.setState({ isSubmitted: false });
 
     // Grab the users token
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hbmRvcGFkaWxsYTgxQGdtYWlsLmNvbSIsImlkIjoiNWNiNzU0MGZlZmQ1Y2U1NWJhNGZjM2Y4IiwidXNlcm5hbWUiOiJhcm1hbmRvIiwiaWF0IjoxNTU1ODUxODgyfQ.KXuUF82jtpIr1Yf8almnbVjfi1u2tRYDVuakRVLSVVY';
+    const token = cookies.load("token");
 
     // Format the date-time
     const dateTime = new Date(this.state.startDate+' '+this.state.startTime);
