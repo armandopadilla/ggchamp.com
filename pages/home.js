@@ -34,12 +34,12 @@ export default class Home extends Component {
     joinErrorMessage: null,
   };
 
-  static async getInitialProps (ctx) {
+  static async getInitialProps ({ query }) {
     // Check if the user is logged in.
-    if (!auth.isLoggedIn()) {
-      console.log("not logged in")
-      return redirect(ctx, '/')
-    }
+    //if (!auth.isLoggedIn()) {
+    //  console.log("not logged in")
+    //  return redirect(ctx, '/')
+    //}
 
     return {
       lobbyData: query.lobbyData,

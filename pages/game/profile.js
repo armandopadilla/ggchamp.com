@@ -29,9 +29,6 @@ export default class Profile extends Component {
   };
 
   render () {
-
-    console.log(this.props.game);
-
     const playerTableInfo = this.props.game.playersInfo.map((player) => {
       return (
         <tr>

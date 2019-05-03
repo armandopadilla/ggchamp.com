@@ -26,30 +26,10 @@ fastify
 
     // Wallet Banking Services
     fastify.next('/wallet/deposit', require('./backend/wallet/deposit'));
-    fastify.next('/wallet/deposit-thankyou', require('./backend/wallet/deposit-thankyou'));
     fastify.next('/wallet/withdraw', require('./backend/wallet/withdraw'));
     fastify.next('/wallet', require('./backend/wallet'));
 
   });
-
-
-// Async endpoints
-// Create User
-fastify.register(require('./backend/user/postCreateUser'));
-// Join a game
-fastify.register(require('./backend/game/postJoinGame'));
-// Create a game (match)
-fastify.register(require('./backend/game/postCreateGame'));
-// Reset Password
-fastify.register(require('./backend/postResetPassword'));
-// Deposit
-//fastify.register(require('./backend/wallet/postDeposit'));
-// Withdraw
-//fastify.register(require('./backend/wallet/postWithdraw'));
-// Invite
-fastify.register(require('./backend/postInvite'));
-
-
 
 fastify.listen(8080, err => {
   if (err) throw err;

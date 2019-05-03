@@ -1,29 +1,3 @@
-const request = require('request-promise');
-const {
-  API_URL,
-  API_APP_ID,
-  API_USER_PROFILE_ENDPOINT
-} = require('../../constants');
-
 module.exports = async (app, req, res) => {
-
-  // Check if the user is logged in or not
-
-  // Grab the token
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hbmRvcGFkaWxsYTgxQGdtYWlsLmNvbSIsImlkIjoiNWNiNzU0MGZlZmQ1Y2U1NWJhNGZjM2Y4IiwidXNlcm5hbWUiOiJhcm1hbmRvIiwiaWF0IjoxNTU1OTQ5NTQ1fQ.ZRru8kGP8ORcEjJCA9OKsH62QcPn7ex9xkk_U8ISy5U';
-
-  // Fetch game info
-  // Fetch the data from API
-  var options = {
-    method: 'GET',
-    url: `${API_URL}`,
-    headers: {
-      'authorization': `Bearer ${token}`
-    }
-  };
-
-  const resUserInfo = await request(options);
-  const userInfo = JSON.parse(resUserInfo).data;
-
-  return app.render(req.raw, res.res, `${API_USER_PROFILE_ENDPOINT}?appId=${API_APP_ID}`, { userInfo }, {})
+  return app.render(req.raw, res.res, '/user/profile', req.query, {})
 };
