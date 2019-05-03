@@ -4,6 +4,7 @@ import App, { Container } from 'next/app';
 import Header from './header';
 import Footer from './footer';
 
+import { auth } from '../utils';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -15,7 +16,7 @@ function initializeReactGA() {
 
 export default class MyApp extends App {
 
-  static async getInitialProps({ Component, router, ctx }) {
+  static async getInitialProps({ Component, router, ctx, req }) {
     initializeReactGA();
 
     let pageProps = {};
@@ -23,6 +24,7 @@ export default class MyApp extends App {
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);
     }
+
 
     return { pageProps }
   }

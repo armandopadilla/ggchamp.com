@@ -30,13 +30,24 @@ export default class Header extends React.Component {
       invite2: null,
       invite3: null,
       walletBalance: props.walletBalance,
+      isLoggedIn: props.isLoggedIn || false,
     };
   }
 
-  static getInitialProps ({ req }) {
-    const token = cookieManager.load("token", req);
+  static async getInitialProps ({ req }) {
+    const isLoggedIn = await auth.isLoggedIn(req);
+    console.log("is logged in", isLoggedIn);
+    if (!isLoggedIn) {
+      return {
+        isLoggedIn: false
+      }
+    }
 
-    var options = {
+    console.log("i was called");
+    const token = cookieManager.load("token", req);
+    console.log("header token", token);
+
+    const options = {
       baseURL: `http://localhost:3000/v1/`,
       headers: {
         'authorization': `Bearer ${token}`
@@ -48,8 +59,10 @@ export default class Header extends React.Component {
       .then((resp) => {
         const { data } = resp.data;
         const { wallet } = data;
+        console.log("data", data);
         return {
-          walletBalance: decorator.formatMoney(data.balance)
+          walletBalance: decorator.formatMoney(data.balance),
+          isLoggedIn: true
         }
       }).catch(e => {
       console.log("error", e);
@@ -119,21 +132,13 @@ export default class Header extends React.Component {
     }
   };
 
-  render = () => {
-
+  getHeader = () => {
+    console.log(this.state);
     // Deafult none-logged-in menu
-    let nav = (
-      <Nav className="ml-auto" navbar>
-        <NavItem>
-          <NavLink href="/signup">Sign Up</NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink href="/login">Log In</NavLink>
-        </NavItem>
-      </Nav>
-    );
+    let nav = null;
 
-    if (auth.isLoggedIn()) {
+    if (this.state.isLoggedIn) {
+      console.log("==== im logged in");
       nav = (
         <Nav className="ml-auto" navbar>
           <NavItem>
@@ -160,11 +165,28 @@ export default class Header extends React.Component {
         </Nav>
       );
 
+    } else {
+      nav = (
+        <Nav className="ml-auto" navbar>
+          <NavItem>
+            <NavLink href="/signup">Sign Up</NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink href="/login">Log In</NavLink>
+          </NavItem>
+        </Nav>
+      );
     }
+
+    return nav;
+  }
+
+  render = () => {
     return (
       <Navbar color="dark" dark expand="md">
         <NavbarBrand href="/home">ggChamp.com</NavbarBrand>
-        { nav }
+
+        { this.getHeader() }
 
         <Modal isOpen={this.state.inviteModal} toggle={this.toggleInviteModal}>
           <ModalHeader toggle={this.toggleInviteModal}>Invite Friends & Competitors</ModalHeader>
