@@ -70,7 +70,7 @@ export default class Profile extends Component {
         <Row>
           <Col md={3}>
             <Card>
-              <CardImg top width="100%" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=318%C3%97180&w=318&h=180" alt="Card image cap" />
+              <CardImg top width="100%" src="/static/images/lol_badge.png" alt="League of Legends" />
               <CardBody>
                 <CardTitle>{ this.props.game.name }</CardTitle>
                 <CardSubtitle>{ this.props.game.title }</CardSubtitle>

@@ -10,9 +10,7 @@ export default class MyDocument extends Document {
   render() {
     return (
       <html>
-      <Head>
-        <title>ggChamp.com</title>
-      </Head>
+      <Head></Head>
       <body className="custom_class">
       <Main />
       <NextScript />

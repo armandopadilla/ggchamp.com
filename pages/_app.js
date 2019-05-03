@@ -1,23 +1,19 @@
-import ReactGA from 'react-ga';
 import React from 'react';
 import App, { Container } from 'next/app';
-import Header from './header';
-import Footer from './footer';
-
-import { auth } from '../utils';
+import Head from 'next/head'
+import cookies from 'isomorphic-cookie';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-function initializeReactGA() {
-  ReactGA.initialize('UA-136536235-1');
-  ReactGA.pageview('/home');
-};
+import Header from './header';
+import Footer from './footer';
+
+
 
 
 export default class MyApp extends App {
 
-  static async getInitialProps({ Component, router, ctx, req }) {
-    initializeReactGA();
+  static async getInitialProps({ Component, router, ctx }) {
 
     let pageProps = {};
 
@@ -25,6 +21,40 @@ export default class MyApp extends App {
       pageProps = await Component.getInitialProps(ctx);
     }
 
+    // isLoggedIn
+    const token = cookies.load("token", ctx.req);
+    if (token) {
+      pageProps.isLoggedIn = true
+    } else {
+      pageProps.isLoggedIn = false;
+    }
+
+/*
+    console.log(props);
+    const token = cookieManager.load("token", req);
+    console.log("header token", token);
+
+    const options = {
+      baseURL: `http://localhost:3000/v1/`,
+      headers: {
+        'authorization': `Bearer ${token}`
+      }
+    };
+
+    const axiosInstance = axios.create(options);
+    return axiosInstance.get(`wallet/my-wallet`)
+      .then((resp) => {
+        const { data } = resp.data;
+        const { wallet } = data;
+        console.log("data", data);
+        return {
+          walletBalance: decorator.formatMoney(data.balance),
+          isLoggedIn: true
+        }
+      }).catch(e => {
+        console.log("error", e);
+      });
+    */
 
     return { pageProps }
   }
@@ -34,7 +64,10 @@ export default class MyApp extends App {
 
     return (
       <Container>
-        <Header />
+        <Head>
+          <title>ggchamp.com</title>
+        </Head>
+        <Header {...pageProps} />
           <Component {...pageProps} />
         <Footer />
       </Container>

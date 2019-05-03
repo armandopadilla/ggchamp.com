@@ -34,41 +34,6 @@ export default class Header extends React.Component {
     };
   }
 
-  static async getInitialProps ({ req }) {
-    const isLoggedIn = await auth.isLoggedIn(req);
-    console.log("is logged in", isLoggedIn);
-    if (!isLoggedIn) {
-      return {
-        isLoggedIn: false
-      }
-    }
-
-    console.log("i was called");
-    const token = cookieManager.load("token", req);
-    console.log("header token", token);
-
-    const options = {
-      baseURL: `http://localhost:3000/v1/`,
-      headers: {
-        'authorization': `Bearer ${token}`
-      }
-    };
-
-    const axiosInstance = axios.create(options);
-    return axiosInstance.get(`wallet/my-wallet`)
-      .then((resp) => {
-        const { data } = resp.data;
-        const { wallet } = data;
-        console.log("data", data);
-        return {
-          walletBalance: decorator.formatMoney(data.balance),
-          isLoggedIn: true
-        }
-      }).catch(e => {
-      console.log("error", e);
-    });
-  }
-
   componentDidMount () {}
 
   toggleInviteModal = () => {
@@ -133,12 +98,10 @@ export default class Header extends React.Component {
   };
 
   getHeader = () => {
-    console.log(this.state);
     // Deafult none-logged-in menu
     let nav = null;
 
     if (this.state.isLoggedIn) {
-      console.log("==== im logged in");
       nav = (
         <Nav className="ml-auto" navbar>
           <NavItem>
