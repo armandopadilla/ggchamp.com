@@ -17,11 +17,9 @@ import {
 } from 'reactstrap';
 import axios from 'axios';
 import cookieManager from 'isomorphic-cookie';
-import { decorator } from '../utils'
+import { decorator, auth } from '../utils'
 
 export default class Header extends React.Component {
-
-
 
   constructor (props) {
     super(props);
@@ -31,12 +29,12 @@ export default class Header extends React.Component {
       invite1: null,
       invite2: null,
       invite3: null,
-      walletBalance: 0,
+      walletBalance: props.walletBalance,
     };
   }
 
-  componentDidMount () {
-    const token = cookieManager.load("token");
+  static getInitialProps ({ req }) {
+    const token = cookieManager.load("token", req);
 
     var options = {
       baseURL: `http://localhost:3000/v1/`,
@@ -46,18 +44,19 @@ export default class Header extends React.Component {
     };
 
     const axiosInstance = axios.create(options);
-    axiosInstance.get(`wallet/my-wallet`)
+    return axiosInstance.get(`wallet/my-wallet`)
       .then((resp) => {
         const { data } = resp.data;
         const { wallet } = data;
-        this.setState({
+        return {
           walletBalance: decorator.formatMoney(data.balance)
-        })
+        }
       }).catch(e => {
-        console.log("error", e);
+      console.log("error", e);
     });
-
   }
+
+  componentDidMount () {}
 
   toggleInviteModal = () => {
     this.setState({
@@ -120,12 +119,6 @@ export default class Header extends React.Component {
     }
   };
 
-  isLoggedIn = () => {
-    // Grab the token
-    const token = cookieManager.load("token");
-    return (token);
-  }
-
   render = () => {
 
     // Deafult none-logged-in menu
@@ -140,7 +133,7 @@ export default class Header extends React.Component {
       </Nav>
     );
 
-    if (this.isLoggedIn()) {
+    if (auth.isLoggedIn()) {
       nav = (
         <Nav className="ml-auto" navbar>
           <NavItem>

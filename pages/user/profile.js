@@ -8,7 +8,6 @@ import {
   CardTitle,
   CardSubtitle,
   CardText,
-  Button,
   Table
 } from 'reactstrap';
 
@@ -17,6 +16,12 @@ const stylez = {
     textAlign: "center"
   }
 }
+import axios from 'axios';
+import cookies from 'isomorphic-cookie';
+import {
+  API_USER_PROFILE_ENDPOINT,
+  API_APP_ID,
+}  from '../../constants'
 
 
 
@@ -24,12 +29,33 @@ export default class Profile extends Component {
 
   constructor (props) {
     super(props);
+    this.state = {
+      userInfo: props.userInfo || {}
+    }
   }
 
-  static async getInitialProps({ query }) {
-    return {
-      userInfo: query.userInfo
-    }
+  static async getInitialProps({ req }) {
+
+    // Get the user info.
+    const token = cookies.load("token", req);
+
+    const options = {
+      baseURL: `http://localhost:3000/v1/`,
+      headers: {
+        'authorization': `Bearer ${token}`
+      }
+    };
+
+    const axiosInstance = axios.create(options);
+    return axiosInstance.get(`${API_USER_PROFILE_ENDPOINT}?appId=${API_APP_ID}`)
+      .then((resp) => {
+        const { data: userInfo } = resp.data;
+        return {
+          userInfo,
+        }
+      }).catch(e => {
+        //console.log("error", e);
+      });
   }
 
   getGamesRow = () => {
