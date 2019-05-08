@@ -11,14 +11,14 @@ import {
   Alert
 } from 'reactstrap';
 import axios from 'axios';
-import cookieManager from 'isomorphic-cookie';
+import cookies from 'isomorphic-cookie';
 import {
   API_APP_ID,
   API_URL,
-  API_GAME_ENDPOINT,
+  API_GAMES_ENDPOINT,
+  API_MY_GAMES_ENDPOINT,
 } from '../constants'
-import { decorator, auth } from '../utils';
-import redirect from 'next-redirect';
+import { decorator } from '../utils';
 
 
 export default class Home extends Component {
@@ -34,17 +34,35 @@ export default class Home extends Component {
     joinErrorMessage: null,
   };
 
-  static async getInitialProps ({ query }) {
-    // Check if the user is logged in.
-    //if (!auth.isLoggedIn()) {
-    //  console.log("not logged in")
-    //  return redirect(ctx, '/')
-    //}
+  static async getInitialProps ({ req }) {
 
-    return {
-      lobbyData: query.lobbyData,
-      myGames: query.myGames
-    }
+    // Check if the user is logged in
+    const token = cookies.load("token", req);
+
+    var options = {
+      baseURL: `http://localhost:3000/v1/`,
+      headers: {
+        'authorization': `Bearer ${token}`
+      }
+    };
+
+    let response = {};
+    const axiosInstance = axios.create(options);
+    return axiosInstance.get(`${API_GAMES_ENDPOINT}?$appId=${API_APP_ID}`)
+      .then((resp) => {
+        const lobbyData = resp.data.data;
+        response.lobbyData = lobbyData;
+      })
+      .then(() => axiosInstance.get(`${API_MY_GAMES_ENDPOINT}?$appId=${API_APP_ID}`))
+      .then((resp) => {
+        response.myGames = resp.data.data;
+        console.log(response);
+        return response;
+      })
+      .catch(e => {
+        console.log("error", e);
+        return {}
+      });
   };
 
   toggleJoinModal = (e) => {
@@ -89,7 +107,7 @@ export default class Home extends Component {
 
   getGameInfo = () => {
     // Grab the token
-    const token = cookieManager.load("token");
+    const token = cookies.load("token");
 
     let options = {
       baseURL: `${API_URL}`,
@@ -207,7 +225,7 @@ export default class Home extends Component {
     } else {
       return (
         <Table striped>
-          <tbody><tr><td>You haven't joined any games</td></tr></tbody>
+          <tbody><tr><td>You haven't joined any games.  <Button color="primary" href="/game/create">Schedule your match!</Button></td></tr></tbody>
         </Table>)
     }
 
@@ -238,20 +256,19 @@ export default class Home extends Component {
           <ModalHeader toggle={this.toggleJoinModal}>Join Game</ModalHeader>
           <ModalBody>
             { this.getJoinAlertMessage() }
-            Are you sure you want to join, { this.state.joinGameInfo.name  }?.
+            Are you sure you want to join, { decorator.formatMatchName(this.state.joinGameInfo.name)  }?.
 
-            <div>Entry Fee: ${ this.state.joinGameInfo.entryFee }</div>
-            <div>Max Participants: { this.state.joinGameInfo.maxParticipants }</div>
-            <div>Start Date/Time: { this.state.joinGameInfo.startDateTime }</div>
+            <div>Entry Fee: { decorator.formatMatchEntryFee(this.state.joinGameInfo.entryFee) }</div>
+            <div>Max Participants: { decorator.formatParticipants(this.state.joinGameInfo.maxParticipants) }</div>
+            <div>Start Date/Time: { decorator.formatDate(this.state.joinGameInfo.startDateTime) }</div>
 
             <hr />
             <div style={{ fontSize: "10px" }}>
-              By pressing "yup" your account will be deducted,
-              you agree to the terms of use.
+              By pressing "Yes" your account will be deducted the entry fee and you agree to the terms of use.
             </div>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={ this.joinMatch }>Yup</Button>{' '}
+            <Button color="primary" onClick={ this.joinMatch }>Yes</Button>{' '}
             <Button color="secondary" onClick={this.toggleJoinModal}>Nah, Ill pass</Button>
           </ModalFooter>
         </Modal>

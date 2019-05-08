@@ -31,6 +31,7 @@ export default class Header extends React.Component {
       invite3: null,
       walletBalance: props.walletBalance,
       isLoggedIn: props.isLoggedIn || false,
+      myEarnings: props.myEarnings || 0.00,
     };
   }
 
@@ -105,7 +106,7 @@ export default class Header extends React.Component {
       nav = (
         <Nav className="ml-auto" navbar>
           <NavItem>
-            <NavLink href="/user/profile">Earnings To Date: ${this.state.walletBalance}</NavLink>
+            <NavLink href="/wallet">Earnings To Date: { decorator.formatMoney(this.state.myEarnings) }</NavLink>
           </NavItem>
           <NavItem>
             <NavLink href="/home">Match Lobby</NavLink>
@@ -170,7 +171,7 @@ export default class Header extends React.Component {
           </ModalBody>
           <ModalFooter>
             <Button color="primary" onClick={ this.handleSubmit }>Invite!</Button>{' '}
-            <Button color="default" onClick={this.toggleInviteModal}>Never mind...:-\</Button>
+            <Button color="secondary" onClick={this.toggleInviteModal}>Never mind</Button>
           </ModalFooter>
         </Modal>
       </Navbar>

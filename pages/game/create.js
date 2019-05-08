@@ -64,9 +64,6 @@ export default class GameCreate extends Component {
         this.setState({ isSubmitted: true, isSuccess: true });
 
         // Join the contest
-
-
-
         this.setState({
           isSubmitted: true,
           isError: false,

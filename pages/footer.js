@@ -16,7 +16,7 @@ export default () => {
   return (
     <div style={footerStyle}>
       <div>ggchamp.com copyright 2019</div>
-      <div>Terms of Use | Privacy Policy</div>
+      <div><a href="/terms">Terms of Use</a> | <a href="/privacy-policy">Privacy Policy</a></div>
     </div>
   )
 }

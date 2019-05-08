@@ -2,11 +2,14 @@ import React from 'react';
 import App, { Container } from 'next/app';
 import Head from 'next/head'
 import cookies from 'isomorphic-cookie';
+import axios from 'axios';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Header from './header';
 import Footer from './footer';
+
+
 
 
 
@@ -29,11 +32,15 @@ export default class MyApp extends App {
       pageProps.isLoggedIn = false;
     }
 
-/*
-    console.log(props);
-    const token = cookieManager.load("token", req);
-    console.log("header token", token);
+    // Check if the user should be redirected to the login
+    const nonAuthPages = ['/', '/login', '/signup', '/terms-of-use'];
 
+    if (!token && nonAuthPages.indexOf(router.route) == -1) {
+      ctx.res.writeHead(302, {Location: `/login`})
+      ctx.res.end()
+    }
+
+    // Get the earnings.
     const options = {
       baseURL: `http://localhost:3000/v1/`,
       headers: {
@@ -42,21 +49,17 @@ export default class MyApp extends App {
     };
 
     const axiosInstance = axios.create(options);
-    return axiosInstance.get(`wallet/my-wallet`)
+    return axiosInstance.get(`wallet/my-earnings`)
       .then((resp) => {
         const { data } = resp.data;
-        const { wallet } = data;
-        console.log("data", data);
-        return {
-          walletBalance: decorator.formatMoney(data.balance),
-          isLoggedIn: true
-        }
+        const { myEarnings } = data;
+        pageProps.myEarnings = myEarnings;
+
+        return { pageProps }
       }).catch(e => {
         console.log("error", e);
+        return { pageProps }
       });
-    */
-
-    return { pageProps }
   }
 
   render() {

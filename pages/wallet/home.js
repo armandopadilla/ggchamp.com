@@ -97,7 +97,7 @@ export default class Home extends Component {
             <Card>
               <CardBody>
                 <CardTitle><h3 style={{ textAlign: "center" }}>Wallet Ballance</h3></CardTitle>
-                <CardText style={{ textAlign: "center" }}>${this.props.walletBalance}</CardText>
+                <CardText style={{ textAlign: "center" }}>{this.props.walletBalance}</CardText>
               </CardBody>
             </Card>
           </Col>

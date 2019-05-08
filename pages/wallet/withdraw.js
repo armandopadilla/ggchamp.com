@@ -25,11 +25,6 @@ const stylez = {
 
 export default class Withdraw extends Component {
 
-  static async getInitialProps ({ req }) {
-    // Get the accounts
-
-  }
-
   constructor (props) {
     super(props);
 
