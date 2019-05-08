@@ -104,7 +104,7 @@ export default class Index extends Component {
         </FormGroup>
         <FormGroup>
           <Label for="phone">Phone Number</Label>
-          <Input type="phone" name="phone" id="phone" placeholder="1 555-6780" onChange={ this.handleInputChange } />
+          <Input type="phone" name="phone" id="phone" placeholder="1 345-555-6780" onChange={ this.handleInputChange } />
         </FormGroup>
         <FormGroup>
           <Label for="dob">Date of Birth</Label>
@@ -113,7 +113,7 @@ export default class Index extends Component {
         <FormGroup>
           <hr />
           <div style={{ fontSize: "12px", textAlign: "center" }}>
-            By clicking "Sign Up" you agree to the Terms of Use.
+            By clicking "Sign Up" you agree to the <a href="/terms">Terms of Use</a>.
           </div>
           <hr />
           <Button type="primary" block>Sign Up</Button>

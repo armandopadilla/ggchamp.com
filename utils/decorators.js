@@ -13,13 +13,13 @@ const formatGameTitle = (gameTitle) => (gameTitle) ? gameTitle : "Not Available"
 
 const formatMatchName = (matchName) => (matchName)? matchName : "Not Available";
 
-const formatMoney = (amount) => (amont)? amount.toFixed(2) : 0.00;
+const formatMoney = (amount) => (amount)? `$${amount.toFixed(2)}` : `$0.00`;
 
 const formatMatchType = (matchType) => (matchType) ? matchType : "Not Available";
 
 const formatParticipants = (matchParticipants) => (matchParticipants) ? matchParticipants : "Not Available";
 
-const formatMatchEntryFee = (matchEntryFee) => (matchEntryFee) ? matchEntryFee.toFixed(2) : 0.00;
+const formatMatchEntryFee = (matchEntryFee) => (matchEntryFee) ? `$${matchEntryFee.toFixed(2)}` : `$0.00`;
 
 const formatPot = (entryFee, maxParticipants) => {
   if (entryFee && maxParticipants) {

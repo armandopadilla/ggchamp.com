@@ -24,6 +24,9 @@ const stylez = {
 
 import cookies from 'isomorphic-cookie';
 import axios from 'axios';
+import { decorator } from '../../utils';
+
+import lolBadge from '../../static/images/lol_badge.png';
 
 export default class Profile extends Component {
 
@@ -45,13 +48,10 @@ export default class Profile extends Component {
     return axiosInstance.get(`${API_GAME_ENDPOINT}/${gameId}?appId=${API_APP_ID}&playerInfo=1`)
       .then((resp) => {
         const { data: game } = resp.data;
-        //console.log("game", game);
-        //console.log("data", resp.data);
-        return {
-          game
-        }
+        return { game }
       }).catch(e => {
-        //console.log("error", e);
+        console.log("error", e);
+        return {}
       });
   };
 
@@ -70,14 +70,14 @@ export default class Profile extends Component {
         <Row>
           <Col md={3}>
             <Card>
-              <CardImg top width="100%" src="/static/images/lol_badge.png" alt="League of Legends" />
+              <CardImg top width="100%" src={lolBadge} alt="League of Legends" />
               <CardBody>
-                <CardTitle>{ this.props.game.name }</CardTitle>
-                <CardSubtitle>{ this.props.game.title }</CardSubtitle>
+                <CardTitle>{ decorator.formatMatchName(this.props.game.name) }</CardTitle>
+                <CardSubtitle>{ decorator.formatGameTitle(this.props.game.title) }</CardSubtitle>
                 <CardText>
-                  <div>{ this.props.game.matchType }</div>
-                  <div>Entry Fee: ${ this.props.game.entryFee.toFixed(2) }</div>
-                  <div>Max Pot: ${ (this.props.game.entryFee * this.props.game.maxParticipants).toFixed(2) } (minus transaction fee)</div>
+                  <div>{ decorator.formatMatchType(this.props.game.matchType) }</div>
+                  <div>Entry Fee: { decorator.formatMatchEntryFee(this.props.game.entryFee) }</div>
+                  <div>Max Pot: { decorator.formatPot(this.props.game.entryFee, this.props.game.maxParticipants)  } (minus transaction fee)</div>
                 </CardText>
               </CardBody>
             </Card>
@@ -90,7 +90,7 @@ export default class Profile extends Component {
                   <thead>
                   <tr>
                     <th>Player</th>
-                    <th>Win Percentage</th>
+                    <th>GG Champ Win Percentage</th>
                   </tr>
                   </thead>
                   <tbody>

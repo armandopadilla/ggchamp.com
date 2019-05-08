@@ -14,6 +14,8 @@ fastify
     fastify.next('/login', require('./backend/login'));
     fastify.next('/logout', require('./backend/logout'));
     fastify.next('/invite', require('./backend/invite'));
+    fastify.next('/terms', require('./backend/terms'));
+    fastify.next('/privacy-policy', require('./backend/privacy-policy'));
 
     // Games
     fastify.next('/game/:gameId/join', require('./backend/game/join'));
