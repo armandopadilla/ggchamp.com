@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  Row,
   Col,
   Form,
   FormGroup,
@@ -21,9 +22,10 @@ export default class GameCreate extends Component {
   state = {
     matchName: '',
     title: '',
-    gameType: '',
+    matchType: '',
     startDate: '',
     startTime: '',
+    startTimezone: '',
     entryFee: '',
     isSubmitted: false,
     isError: null,
@@ -32,6 +34,7 @@ export default class GameCreate extends Component {
   };
 
   handleInputChange = (e) => {
+
     const { id, value } = e.target;
     this.setState({[id]: value});
   };
@@ -68,13 +71,10 @@ export default class GameCreate extends Component {
           isSubmitted: true,
           isError: false,
           isSuccess: true });
-
-
       }
       catch(e) {
         this.setState({ isSubmitted: true, isError: true, message: e.response.message });
       }
-
     });
 
   };
@@ -104,38 +104,70 @@ export default class GameCreate extends Component {
         <h4>Schedule Match</h4>
         { this.getSubmitMessage() }
         <Form onSubmit={this.handleOnSubmit}>
-          <FormGroup>
-            <Label for="match_name">Match Name</Label>
-            <Input type="text" name="matchName" id="matchName" onChange={this.handleInputChange} />
-          </FormGroup>
-          <FormGroup>
-            <Label for="title">Game</Label>
-            <Input type="select" name="title" id="title">
-              <option>League of Legends</option>
-            </Input>
-          </FormGroup>
-          <FormGroup>
-            <Label for="gameType">Game Type</Label>
-            <Input type="select" name="gameType" id="gameType">
-              <option>3 v 3</option>
-              <option>5 v 5</option>
-            </Input>
-          </FormGroup>
-          <FormGroup>
-            <Label for="startDate">Scheduled Start Date</Label>
-            <Input type="date" name="startDate" id="startDate" onChange={this.handleInputChange} />
-          </FormGroup>
-          <FormGroup>
-            <Label for="startTime">Scheduled Start Time</Label>
-            <Input type="time" name="startTime" id="startTime" onChange={this.handleInputChange} />
-          </FormGroup>
-          <FormGroup>
-            <Label for="entryFee">Minimum Entry Fee</Label>
-            <Input type="text" name="entryFee" id="entryFee" onChange={this.handleInputChange} />
-          </FormGroup>
-          <FormGroup>
-            <Button>Schedule Match</Button>
-          </FormGroup>
+          <Row form>
+            <Col md={12}>
+              <FormGroup>
+                <Label for="match_name">Match Name</Label>
+                <Input type="text" name="matchName" id="matchName" onChange={this.handleInputChange} />
+              </FormGroup>
+            </Col>
+          </Row>
+          <Row form>
+            <Col md={6}>
+              <FormGroup>
+                <Label for="title">Game</Label>
+                <Input type="select" name="title" id="title" onChange={ this.handleInputChange }>
+                  <option value="">-- Select Game ---</option>
+                  <option>League of Legends</option>
+                </Input>
+              </FormGroup>
+            </Col>
+            <Col md={6}>
+              <FormGroup>
+                <Label for="matchType">Match Type</Label>
+                <Input type="select" name="matchType" id="matchType" onChange={ this.handleInputChange }>
+                  <option value="">-- Select Game Type ---</option>
+                  <option>3 v 3</option>
+                  <option>5 v 5</option>
+                </Input>
+              </FormGroup>
+            </Col>
+          </Row>
+          <Row form>
+            <Col md={4}>
+              <FormGroup>
+                <Label for="startDate">Scheduled Start Date</Label>
+                <Input type="date" name="startDate" id="startDate" onChange={this.handleInputChange} />
+              </FormGroup>
+            </Col>
+            <Col md={4}>
+              <FormGroup>
+                <Label for="startTime">Scheduled Start Time</Label>
+                <Input type="time" name="startTime" id="startTime" onChange={this.handleInputChange} />
+              </FormGroup>
+            </Col>
+            <Col md={4}>
+              <Label for="startTimezone">Scheduled Timezone</Label>
+              <Input type="select" name="startTimezone" id="startTimezone" onChange={ this.handleInputChange }>
+                <option value="">--- Select Timezone ---</option>
+                <option>PST</option>
+                <option>EST</option>
+                <option>MST</option>
+                <option>GMT</option>
+              </Input>
+            </Col>
+          </Row>
+          <Row form>
+            <Col md={6}>
+              <FormGroup>
+                <Label for="entryFee">Minimum Entry Fee</Label>
+                <Input type="text" name="entryFee" id="entryFee" onChange={this.handleInputChange} />
+              </FormGroup>
+              <FormGroup>
+                <Button color="primary">Schedule Match</Button> {' '} <Button color="secondary">Cancel</Button>
+              </FormGroup>
+            </Col>
+          </Row>
         </Form>
       </Col>
     )

@@ -13,8 +13,7 @@ import {
   Input,
   Alert,
 } from 'reactstrap';
-import axios from 'axios';
-import cookieManager from 'isomorphic-cookie';
+import { restReq } from '../../utils';
 
 const stylez = {
   h3: {
@@ -44,16 +43,7 @@ export default class Withdraw extends Component {
       submitErrorMessage: null,
     })
 
-    const token = cookieManager.load("token");
-    let options = {
-      baseURL: `http://localhost:3000/v1/`,
-      headers: {
-        'authorization': `Bearer ${token}`
-      }
-    };
-
-    const axiosInstance = axios.create(options);
-    return axiosInstance.post(`wallet/withdraw`, {
+    return restReq().post(`wallet/withdraw`, {
       amount: this.state.amount
     })
       .then((resp) => {

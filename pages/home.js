@@ -18,7 +18,7 @@ import {
   API_GAMES_ENDPOINT,
   API_MY_GAMES_ENDPOINT,
 } from '../constants'
-import { decorator } from '../utils';
+import { decorator, restReq } from '../utils';
 
 
 export default class Home extends Component {
@@ -26,8 +26,8 @@ export default class Home extends Component {
   state = {
     joinModal: false,
     inviteModal: false,
-    lobbyData: this.props.lobbyData,
-    myGames: this.props.myGames,
+    lobbyData: this.props.lobbyData || [],
+    myGames: this.props.myGames || [],
     selectedJoinMatchId: null,
     joinGameInfo: {},
     isJoinSubmitted: false,
@@ -36,19 +36,8 @@ export default class Home extends Component {
 
   static async getInitialProps ({ req }) {
 
-    // Check if the user is logged in
-    const token = cookies.load("token", req);
-
-    var options = {
-      baseURL: `http://localhost:3000/v1/`,
-      headers: {
-        'authorization': `Bearer ${token}`
-      }
-    };
-
     let response = {};
-    const axiosInstance = axios.create(options);
-    return axiosInstance.get(`${API_GAMES_ENDPOINT}?$appId=${API_APP_ID}`)
+    return restReq().get(`${API_GAMES_ENDPOINT}?$appId=${API_APP_ID}`)
       .then((resp) => {
         const lobbyData = resp.data.data;
         response.lobbyData = lobbyData;
@@ -86,7 +75,6 @@ export default class Home extends Component {
 
 
   getMatchTableRows = (records, showJoinButton) => records.map((game) => {
-
       let joinButton = (showJoinButton) ? (<Button id={game._id} onClick={this.toggleJoinModal}>Join</Button>) : null;
 
       return (<tr key={game._id}>
@@ -98,7 +86,7 @@ export default class Home extends Component {
         <td>{ decorator.formatParticipants(game.participants.length) }</td>
         <td>{ decorator.formatMatchEntryFee(game.entryFee) }</td>
         <td>{ decorator.formatPot(game.entryFee, game.maxParticipants) }</td>
-        <td>{ decorator.formatDate(game.startDateTime) }</td>
+        <td>{ decorator.formatDate(game.startDateTime, game.startTimezone) }</td>
         <td>{ joinButton }</td>
       </tr>);
 
@@ -106,24 +94,12 @@ export default class Home extends Component {
 
 
   getGameInfo = () => {
-    // Grab the token
-    const token = cookies.load("token");
-
-    let options = {
-      baseURL: `${API_URL}`,
-      headers: {
-        'authorization': `Bearer ${token}`
-      }
-    };
-
-    const axiosInstance = axios.create(options);
-    axiosInstance.get(`${API_GAME_ENDPOINT}/${this.state.selectedJoinMatchId}?appId=${API_APP_ID}`)
+    restReq().get(`${API_GAME_ENDPOINT}/${this.state.selectedJoinMatchId}?appId=${API_APP_ID}`)
       .then((resp) => {
         const data = resp.data;
         const { name,  startDateTime, entryFee, maxParticipants } = data.data;
         this.setState({ joinGameInfo: { name, startDateTime, entryFee, maxParticipants } });
       });
-
   };
 
 
@@ -133,19 +109,7 @@ export default class Home extends Component {
   joinMatch = () => {
     const gameInfoToJoin = this.state.joinGameInfo;
 
-    // make the call to join the specific game
-    // Grab the token
-    const token = cookieManager.load("token");
-
-    let options = {
-      baseURL: `${API_URL}`,
-      headers: {
-        'authorization': `Bearer ${token}`
-      }
-    };
-
-    const axiosInstance = axios.create(options);
-    axiosInstance.post(`game/${this.state.selectedJoinMatchId}/join?appId=${API_APP_ID}`, {
+    restReq().post(`game/${this.state.selectedJoinMatchId}/join?appId=${API_APP_ID}`, {
       contestId: 1,
     })
       .then((resp) => {
