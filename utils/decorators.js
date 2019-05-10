@@ -1,4 +1,5 @@
-const formatDate = (date) => {
+const formatDate = (date, timezone) => {
+  console.log("timezone", timezone);
   return new Date(date).toLocaleDateString('en-US', {
     weekday: "short",
     year: "numeric",
@@ -6,7 +7,7 @@ const formatDate = (date) => {
     day: "numeric",
     hour: "numeric",
     minute: "numeric"
-  }) + " Pacific"
+  }) + " "+timezone
 };
 
 const formatGameTitle = (gameTitle) => (gameTitle) ? gameTitle : "Not Available";

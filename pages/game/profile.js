@@ -70,7 +70,11 @@ export default class Profile extends Component {
         <Row>
           <Col md={3}>
             <Card>
-              <CardImg top width="100%" src={lolBadge} alt="League of Legends" />
+              <CardImg top src={lolBadge} alt="League of Legends" style={{
+                width: '100px',
+                margin: 'auto',
+                marginTop: '10px;'
+              }} />
               <CardBody>
                 <CardTitle>{ decorator.formatMatchName(this.props.game.name) }</CardTitle>
                 <CardSubtitle>{ decorator.formatGameTitle(this.props.game.title) }</CardSubtitle>

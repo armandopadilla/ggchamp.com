@@ -10,10 +10,6 @@ import Header from './header';
 import Footer from './footer';
 
 
-
-
-
-
 export default class MyApp extends App {
 
   static async getInitialProps({ Component, router, ctx }) {

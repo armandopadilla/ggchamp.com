@@ -15,9 +15,11 @@ import {
   Input,
   Alert,
 } from 'reactstrap';
-import axios from 'axios';
-import cookieManager from 'isomorphic-cookie';
-import { decorator, auth } from '../utils'
+import {
+  API_APP_ID,
+  API_INVITE_ENDPOINT
+} from '../constants'
+import { decorator, restReq } from '../utils'
 
 export default class Header extends React.Component {
 
@@ -59,22 +61,9 @@ export default class Header extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
 
-    // Make a call to the BE.
-    // Grab the token
-    const token = cookieManager.load("token");
-
-    var options = {
-      baseURL: `http://localhost:3000/v1/`,
-      headers: {
-        'authorization': `Bearer ${token}`
-      }
-    };
-
-    const axiosInstance = axios.create(options);
-    axiosInstance.post(`invite`, this.state)
+    restReq().post(`${API_INVITE_ENDPOINT}?appId=${API_APP_ID}`, this.state)
       .then((resp) => {
         const data = resp.data;
-        console.log("success", resp);
         this.setState({
           inviteSubmitted: true,
         });
@@ -106,7 +95,7 @@ export default class Header extends React.Component {
       nav = (
         <Nav className="ml-auto" navbar>
           <NavItem>
-            <NavLink href="/wallet">Earnings To Date: { decorator.formatMoney(this.state.myEarnings) }</NavLink>
+            <NavLink>Earnings To Date: { decorator.formatMoney(this.state.myEarnings) }</NavLink>
           </NavItem>
           <NavItem>
             <NavLink href="/home">Match Lobby</NavLink>

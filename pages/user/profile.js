@@ -16,13 +16,13 @@ const stylez = {
     textAlign: "center"
   }
 }
-import axios from 'axios';
-import cookies from 'isomorphic-cookie';
+
 import {
   API_USER_PROFILE_ENDPOINT,
   API_APP_ID,
 }  from '../../constants'
 
+import { restReq } from '../../utils';
 
 
 export default class Profile extends Component {
@@ -36,18 +36,7 @@ export default class Profile extends Component {
 
   static async getInitialProps({ req }) {
 
-    // Get the user info.
-    const token = cookies.load("token", req);
-
-    const options = {
-      baseURL: `http://localhost:3000/v1/`,
-      headers: {
-        'authorization': `Bearer ${token}`
-      }
-    };
-
-    const axiosInstance = axios.create(options);
-    return axiosInstance.get(`${API_USER_PROFILE_ENDPOINT}?appId=${API_APP_ID}`)
+    return restReq().get(`${API_USER_PROFILE_ENDPOINT}?appId=${API_APP_ID}`)
       .then((resp) => {
         const { data: userInfo } = resp.data;
         return {
@@ -86,19 +75,19 @@ export default class Profile extends Component {
             <Row style={{ margin: "auto", padding: "5px", paddingBottom: "35px" }}>
               <Col md={3}>
                 <Card body>
-                  <CardTitle style={{ textAlign: "center" }}>Games Played</CardTitle>
+                  <CardTitle style={{ textAlign: "center" }}>GGChamp Games Played</CardTitle>
                   <CardText><h3 style={{ textAlign: "center" }}>{ this.props.userInfo.stats.totalGamesPlayed }</h3></CardText>
                 </Card>
               </Col>
               <Col md={3}>
                 <Card body>
-                  <CardTitle style={{ textAlign: "center" }}>Games Won</CardTitle>
+                  <CardTitle style={{ textAlign: "center" }}>GGChamp Games Won</CardTitle>
                   <CardText><h3 style={{ textAlign: "center" }}>{ this.props.userInfo.stats.totalGamesWon  }</h3></CardText>
                 </Card>
               </Col>
               <Col md={3}>
                 <Card body>
-                  <CardTitle style={{ textAlign: "center" }}>Win Percentage</CardTitle>
+                  <CardTitle style={{ textAlign: "center" }}>GGChamp Win %</CardTitle>
                   <CardText><h3 style={{ textAlign: "center" }}>{ this.props.userInfo.stats.winPercent }%</h3></CardText>
                 </Card>
               </Col>
@@ -125,5 +114,4 @@ export default class Profile extends Component {
       </Col>
     )
   }
-
 }

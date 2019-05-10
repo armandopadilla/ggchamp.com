@@ -11,9 +11,7 @@ import {
   Button,
   Table
 } from 'reactstrap';
-import axios from 'axios';
-import cookieManager from 'isomorphic-cookie';
-import { decorator } from '../../utils';
+import { decorator, restReq } from '../../utils';
 
 const stylez = {
   h3: {
@@ -26,16 +24,7 @@ export default class Home extends Component {
 
   static getInitialProps ({ req }) {
 
-    const token = cookieManager.load("token", req);
-    var options = {
-      baseURL: `http://localhost:3000/v1/`,
-      headers: {
-        'authorization': `Bearer ${token}`
-      }
-    };
-
-    const axiosInstance = axios.create(options);
-    return axiosInstance.get(`wallet/my-wallet`)
+    return restReq().get(`wallet/my-wallet`)
       .then((resp) => {
         const { data } = resp.data;
 
